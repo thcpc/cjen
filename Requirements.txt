@@ -1,0 +1,13 @@
+docx==0.2.4
+jsonpath==0.82
+PyMySQL==1.0.2
+pytest==6.2.4
+PyYAML==5.4.1
+requests==2.26.0
+requests-toolbelt==0.9.1
+ruamel.yaml==0.16.13
+ruamel.yaml.clib==0.2.6
+DBUtils==3.0.2
+chardet==4.0.0
+
+
