@@ -17,6 +17,7 @@ class MetaData(object):
     def factory(*, clazz, data):
         meta = clazz()
         meta.meta_source = data
+        print("1")
         return meta
 
 
