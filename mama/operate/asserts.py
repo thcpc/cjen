@@ -6,26 +6,14 @@ from cjen.mama.meta_data import MetaData
 ALL_FIELDS = "ALL_FIELDS"
 
 
-def validation_all_metas(func):
-    @_get_method_params(method=func)
-    @_check_instance(decorator="orange.assert.validation_fields", expect=BigTangerine)
-    def __inner__(ins: BigTangerine, *args, **kwargs):
-        pass
-
-    return __inner__
-
-
-# TODO 增加对装饰器的判断，看是否有 asserts
-def validation_meta(*, meta_name: str, fields: str = ALL_FIELDS):
+def validation_fields(*, meta_name: str, fields: str):
     """
     使用条件: BigTangerine 及其 子类 对象
-
     位置：json.factory 或 mysql.factory 之后
-
     作用：指定执行对象函数中 MetaData 参数的中含有asserts装饰器的方法
-
-    :param meta_name: 参数名
-    :param fields: 需要执行校验的Field名, 默认是所有Filed, 指定多个以";"分割  例如 "field1;filed2"
+    TODO 增加对装饰器的判断，看是否有 asserts
+    :param meta_name:
+    :param fields:
     :return:
     """
 
@@ -55,7 +43,6 @@ def validation_meta(*, meta_name: str, fields: str = ALL_FIELDS):
                         else:
                             raise Exception(f'{meta_name} do not have {field}')
             return func(ins, *args, **kwargs)
-
         return __inner__
 
     return __wrapper__
