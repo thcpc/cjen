@@ -4,7 +4,7 @@ import time
 from typing import IO
 
 import cjen
-from cjen.dada.smile import SmileVoice
+from cjen.dada import SmileVoice
 
 test_data = {"single.log": [list(range(1, 20)),
                             list(range(21, 40)),
