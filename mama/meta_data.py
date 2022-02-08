@@ -1,3 +1,6 @@
+from cjen.bigtangerine import ContextManager
+
+
 class MetaData(object):
     def __init__(self):
         self.cols = list(filter(
@@ -7,7 +10,7 @@ class MetaData(object):
             dir(self)))
         self.meta_data = dict.fromkeys(self.cols, None)
         self.meta_source = None
-        self.context = {}
+        self.context = ContextManager()
 
     @classmethod
     def is_class(cls, instance):
