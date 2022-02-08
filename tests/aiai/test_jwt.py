@@ -1,6 +1,6 @@
 import pytest
 
-from cjen import BigOrange, JWTFrom, JWTAction
+from cjen import BigTangerine, JWTFrom, JWTAction
 import cjen
 from cjen.exceptions import JwtWrongErr
 
@@ -29,7 +29,7 @@ class Obj1(object):
     def json(self): return dict(auth=123)
 
 
-class TestObj(BigOrange):
+class TestObj(BigTangerine):
 
     @cjen.headers.basicHeaders(headers={"AUTH": ""})
     def __init__(self): super().__init__()
@@ -43,7 +43,7 @@ class TestObj(BigOrange):
         return Obj1()
 
 
-class TestObj2(BigOrange):
+class TestObj2(BigTangerine):
     def __init__(self): super().__init__()
 
     @cjen.jwt(key="AUTH", json_path="$.auth", jwt_from=JWTFrom.BODY, action=JWTAction.INIT)
@@ -55,7 +55,7 @@ class TestObj2(BigOrange):
         return Obj2()
 
 
-class TestObj3(BigOrange):
+class TestObj3(BigTangerine):
     def __init__(self): super().__init__()
 
     @cjen.jwt(key="AUTH", json_path="$.auth", jwt_from=JWTFrom.BODY, action=JWTAction.INIT)
@@ -67,7 +67,7 @@ class TestObj3(BigOrange):
         return Obj3()
 
 
-class TestObj4(BigOrange):
+class TestObj4(BigTangerine):
     def __init__(self): super().__init__()
 
     @cjen.jwt(key="AUTH", json_path="$.auth", jwt_from=JWTFrom.BODY, action=JWTAction.INIT)
@@ -117,3 +117,4 @@ def test_jwt_fail_body():
 
 if __name__ == '__main__':
     pytest.main(["test_jwt_ok.py", "test_jwt_fail_header.py", "test_jwt_fail_body.py"])
+    # pytest.main(["test_jwt_fail_body.py"])
