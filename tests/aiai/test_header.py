@@ -1,10 +1,10 @@
 import pytest
 
-from cjen import BigOrange
+from cjen import BigTangerine
 import cjen
 
 
-class TestObj(BigOrange):
+class TestObj(BigTangerine):
 
     @cjen.headers.basicHeaders(headers=dict(xx=1))
     def __init__(self): super().__init__()

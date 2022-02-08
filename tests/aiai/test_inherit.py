@@ -1,8 +1,8 @@
-from cjen import BigOrange
+from cjen import BigTangerine
 import cjen
 
 
-class Level1(BigOrange):
+class Level1(BigTangerine):
     def __init__(self):
         super().__init__()
 
