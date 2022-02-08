@@ -1,6 +1,43 @@
+class ContextArgs(dict):
+    def __init__(self, seq=None, **kwargs):
+        if seq: super(ContextArgs, self).__init__(seq, **kwargs)
+        else: super(ContextArgs, self).__init__(**kwargs)
+
+
+class ContextManager(object):
+    def __init__(self):
+        self.__cache = {}
+
+    def update(self, E=None, **F):
+        if E and isinstance(E, ContextManager):
+            self.__cache.update(E.__cache, **F)
+        elif E:
+            self.__cache.update(E, **F)
+        else:
+            self.__cache.update(**F)
+
+    def pick_up(self, *, context_args: ContextArgs):
+        return dict(zip(list(context_args.keys()), [self.get(key) for key in list(context_args.values())]))
+
+    @property
+    def content(self):
+        return self.__cache
+
+    def pop(self, key):
+        return self.__cache.pop(key)
+
+    def get(self, key):
+        return self.__cache.get(key)
+
+    def __getitem__(self, key):
+        return self.__cache.__getitem__(key)
+
+    def __setitem__(self, key, value):
+        self.__cache.__setitem__(key, value)
+
+
 class BigTangerine(object):
     """
-    TODO 规范调用的顺序，目前顺序比较乱，导致取值有错误 test_new_code_list.py 调换SuccessResp中procCode 上装饰器assert 和 one 的顺序就会导致失败
     主要的工作类，运行的对象需继承改类型，才能使用一系列装饰器
     定义的方法主要可以如下几种例子:
         针对 POST 请求
@@ -18,12 +55,13 @@ class BigTangerine(object):
         meta_mysql: 可选参数 需搭配@orange.mysql.factory 使用
         ** kwarg: 固定写法
     """
+
     def __init__(self): ...
 
     def __new__(cls, *args, **kwargs):
         self = super(BigTangerine, cls).__new__(cls)
         self.headers = {}
-        self.context = {}
+        self.context = ContextManager()
         return self
 
     @classmethod

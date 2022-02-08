@@ -20,17 +20,20 @@ class JWTAction(Enum):
 
 def jwt(*, key: str, json_path: str, jwt_from: JWTFrom = JWTFrom.BODY, action: JWTAction = JWTAction.INIT):
     """
-    usually use on login api, init the jwt token to headers.
-    only support json response
-    :param action:
-    :param jwt_from:
-    :param key:
-    :param json_path:
+    TODO: EXCHANGE 和 REFRESH 还未测试
+    主要用于JWT登陆方式
+    1. 在Header中初始化 jwt token
+    2. 在Header中交换 jwt token
+    目前只支持返回格式为json
+    :param action: INIT: 登陆时获取token, EXCHANGE: 中间过程交换token, REFRESH:接口交互中实时刷新token
+    :param jwt_from: 用于交换的token的位置 JWTFrom.BODY 响应体中, JWTFrom.HEADER 响应头中
+    :param key: header中 存放token的key
+    :param json_path: 获取token 的json 路径
     :return:
     """
 
     def __wrapper__(func):
-        @_get_method_params(method=func)
+        # @_get_method_params(method=func)
         def __inner__(ins: BigTangerine, *args, **kwargs):
             rsp = func(ins, *args, **kwargs)
             rsp = rsp if jwt_from == JWTFrom.BODY else kwargs.get("response_content").headers
