@@ -1,11 +1,11 @@
 import pytest
 
 import cjen
-from cjen import BigOrange
+from cjen import BigTangerine
 from cjen.exceptions import MethodWrongErr, InstanceWrongErr
 
 
-class System(BigOrange):
+class System(BigTangerine):
     @cjen.headers.basicHeaders(headers={
         "Auth": "",
         "XXX": "yyy"
@@ -32,7 +32,7 @@ def test_add_header_fail_instance():
     ErrorInstance()
 
 
-class ErrorMethod(BigOrange):
+class ErrorMethod(BigTangerine):
 
     def __init__(self):
         super().__init__()

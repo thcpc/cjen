@@ -36,7 +36,7 @@ class TestObj(BigTangerine):
 
     @cjen.jwt(key="AUTH", json_path="$.auth", jwt_from=JWTFrom.BODY, action=JWTAction.INIT)
     def post1(self):
-        return Obj1()
+        return Obj1().json()
 
     @cjen.jwt(key="AUTH", json_path="$.auth", jwt_from=JWTFrom.HEADER, action=JWTAction.INIT)
     def post2(self):
@@ -51,7 +51,8 @@ class TestObj2(BigTangerine):
         return Obj2()
 
     @cjen.jwt(key="AUTH", json_path="$.auth", jwt_from=JWTFrom.HEADER, action=JWTAction.INIT)
-    def post2(self):
+    def post2(self, response_content):
+        response_content = Obj2()
         return Obj2()
 
 
