@@ -4,6 +4,7 @@ import cjen
 from cjen import DatabasePool, BigTangerine, MetaMysql
 
 # @pytest.fixture(scope="function")
+from cjen.bigtangerine import ContextArgs
 from cjen.nene.helper import FileHelper
 
 
@@ -68,6 +69,15 @@ class CMysql(BigTangerine):
         assert employees[0].company() == 'C01'
         assert employees[1].company() == 'C01'
 
+    @cjen.operate.mysql.factory(cursor=cursor(), clazz=Employee, sql=FileHelper.cur_read("employees_of_company.sql"),
+                                params=ContextArgs(id="company_id"), size=-1)
+    def get_c01_employees(self, employees: list[Employee], **kwargs):
+        assert len(employees) == 7
+        for employee in employees: assert employee.company() == "C01"
+
+    @cjen.context.add(content=dict(company_id=1))
+    def set_company_id(self): ...
+
 
 def test_mysql_factory_no_params():
     CMysql().get_one_company()
@@ -81,3 +91,9 @@ def test_mysql_factory_with_normal_params():
     CMysql().get_e0203_employee()
     # tuple
     CMysql().get_e0405_employee()
+
+
+def test_mysql_factory_with_context_args():
+    cm = CMysql()
+    cm.set_company_id()
+    cm.get_c01_employees()
