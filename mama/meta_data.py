@@ -2,6 +2,9 @@ from cjen.bigtangerine import ContextManager
 
 
 class MetaData(object):
+    """
+    无法配合使用 装饰器 @property
+    """
     def __init__(self):
         self.cols = list(filter(
             lambda method: callable(getattr(self, method)) and not method.startswith("_") and not method.endswith(
