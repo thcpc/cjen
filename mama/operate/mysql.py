@@ -1,19 +1,27 @@
 import time
+from typing import IO
 
 from pymysql.cursors import Cursor
 
+import cjen
 from cjen import BigTangerine, MetaMysql
 
 # TODO 时区转换的装饰器
+from cjen.bigtangerine import ContextArgs
 from cjen.commons import _get_method_params
 from cjen.exceptions import _check_instance, _check_params_factory
 from cjen.mama.meta_data import MetaData
 from cjen.mama.operate.common import value
-from cjen.nene.database_pool import DatabasePool
+
+
+@cjen.haha(LogPath="", LogName="CJEN.log")
+def track_sql(msg: dict, io: IO):
+    io.write("{sql}\n".format(**msg))
 
 
 def type_boolean(*, true, false):
     """
+    TODO 待测试
     covert to True or False
     :param true:
     :param false:
@@ -38,17 +46,19 @@ def timezone(*, zone: str): pass
 def type_str_datetime(*, fmt: str): pass
 
 
-def factory(*, cursor: Cursor, clazz, sql: str, params=None, size=1):
+def factory(*, cursor: Cursor, clazz, sql: str, params=None, size=1, track=False):
     """
     TODO 需要测试数据库异常的时候，配合其它装饰器有何影响
     使用条件: 作用在 类型 BigTangerine 或 其子类的 对象
     位置：放在http.post_mapping 等请求装饰器之后
     作用：创建针对MYSQL 的 MetaData
     1. 支持返回一个对象 或 对象列表
+    2. 只支持查询语句
+    :param track: 是否打开日志，记录查询SQL
     :param cursor:
-    :param size: -1 all,
-    :param params:
-    :param sql:
+    :param size: -1 代表取所有的,
+    :param params: sql的查询条件,
+    :param sql: 查询的 sql
     :param clazz:
     :return:
     """
@@ -60,7 +70,9 @@ def factory(*, cursor: Cursor, clazz, sql: str, params=None, size=1):
         def __inner__(ins, *args, **kwargs):
 
             try:
-                cursor.execute(sql, args=params)
+                query_args = ins.context.pick_up(context_args=params) if isinstance(params, ContextArgs) else params
+                cursor.execute(sql, args=query_args)
+                if track: track_sql(dict(sql=cursor.mogrify(sql, args=query_args)))
                 values = cursor.fetchall()
                 cols = [col[0] for col in cursor.description]
                 data = [dict(zip(cols, ele)) for ele in values]
@@ -125,7 +137,6 @@ class TestObj(MetaMysql):
     @value
     def id(self): ...
 
-
 # cusor = DatabasePool.cursor(host="200.200.101.113", user="root", port=3306, pwd="Admin123",
 #                             database="eclinical_design_dev_56")
 
@@ -149,4 +160,4 @@ class TestObj(MetaMysql):
 #
 # if __name__ == '__main__':
 #     Api().yy()
-    # Api().xx()
+# Api().xx()
