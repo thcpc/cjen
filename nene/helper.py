@@ -11,7 +11,7 @@ class FileHelper(object):
     @classmethod
     def cur_read(cls, file):
         """
-        读取同一路径下的文件
+        读取与执行文件下的同一路径文件
         :param file: 文件名
         :return:
         """
