@@ -9,9 +9,9 @@ class ContextManager(object):
         self.__cache = {}
 
     def update(self, E=None, **F):
-        if E and isinstance(E, ContextManager):
+        if E is not None and isinstance(E, ContextManager):
             self.__cache.update(E.__cache, **F)
-        elif E:
+        elif E is not None:
             self.__cache.update(E, **F)
         else:
             self.__cache.update(**F)
