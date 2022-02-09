@@ -1,9 +1,8 @@
-import pytest
+import os
 
 import cjen
 from cjen import DatabasePool, BigTangerine, MetaMysql
 
-# @pytest.fixture(scope="function")
 from cjen.bigtangerine import ContextArgs
 from cjen.nene.helper import FileHelper
 
@@ -45,13 +44,13 @@ class CMysql(BigTangerine):
     def get_many_companies(self, companies: list[Company], **kwargs):
         assert len(companies) == 5
 
-    @cjen.operate.mysql.factory(cursor=cursor(), clazz=Employee, sql=FileHelper.cur_read("employee.sql"),
+    @cjen.operate.mysql.factory(cursor=cursor(), clazz=Employee, sql=FileHelper.read(os.path.dirname(__file__), "employee.sql"), 
                                 params=dict(id=1))
     def get_e01_employee(self, employee: Employee, **kwargs):
         assert employee.name() == "E01"
         assert employee.company() == "C01"
 
-    @cjen.operate.mysql.factory(cursor=cursor(), clazz=Employee, sql=FileHelper.cur_read("employees.sql"),
+    @cjen.operate.mysql.factory(cursor=cursor(), clazz=Employee, sql=FileHelper.read(os.path.dirname(__file__), "employees.sql"),
                                 params=[2, 3], size=-1)
     def get_e0203_employee(self, employees: list[Employee], **kwargs):
         assert len(employees) == 2
@@ -60,7 +59,7 @@ class CMysql(BigTangerine):
         assert employees[0].company() == 'C01'
         assert employees[1].company() == 'C01'
 
-    @cjen.operate.mysql.factory(cursor=cursor(), clazz=Employee, sql=FileHelper.cur_read("employees.sql"),
+    @cjen.operate.mysql.factory(cursor=cursor(), clazz=Employee, sql=FileHelper.read(os.path.dirname(__file__), "employees.sql"),
                                 params=(4, 5), size=-1)
     def get_e0405_employee(self, employees: list[Employee], **kwargs):
         assert len(employees) == 2
@@ -69,7 +68,8 @@ class CMysql(BigTangerine):
         assert employees[0].company() == 'C01'
         assert employees[1].company() == 'C01'
 
-    @cjen.operate.mysql.factory(cursor=cursor(), clazz=Employee, sql=FileHelper.cur_read("employees_of_company.sql"),
+    @cjen.operate.mysql.factory(cursor=cursor(), clazz=Employee,
+                                sql=FileHelper.read(os.path.dirname(__file__), "employees_of_company.sql"),
                                 params=ContextArgs(id="company_id"), size=-1)
     def get_c01_employees(self, employees: list[Employee], **kwargs):
         assert len(employees) == 7
