@@ -1,0 +1,178 @@
+import json
+import os.path
+
+from flask import Flask
+from flask import request, Response, send_file
+
+mock_app = Flask(__name__)
+__mock_data = {"companies": [dict(id=1, name="CO1"), dict(id=2, name="CO2")],
+               "employees": [dict(id=1, name="EO1", company_id=1),
+                             dict(id=2, name="EO2", company_id=1),
+                             dict(id=3, name="EO3", company_id=1),
+                             dict(id=4, name="EO4", company_id=2),
+                             dict(id=5, name="EO5", company_id=2),
+                             ]}
+
+
+def token_in_body(token: str):
+    rsp = base_json_response()
+    rsp.data = json.dumps({"procCode": 200,
+                           "payload": {"jwtAuthenticationResponse": {"token": token},
+                                       "message": "", "exception": None}})
+    return rsp
+
+
+def token_in_header(token: str):
+    rsp = base_json_response()
+    rsp.headers["token"] = token
+    return rsp
+
+
+def base_json_response():
+    rsp = Response()
+    rsp.status_code = 200
+    rsp.headers = {"Content-Type": "application/json"}
+    return rsp
+
+
+@mock_app.route("/init_in_header", methods=["GET"])
+def init_in_header(): return token_in_header("Jwt Init Token In Header")
+
+
+@mock_app.route("/init_in_body", methods=["GET"])
+def init_in_body(): return token_in_body("Jwt Init Token In Body")
+
+
+@mock_app.route("/exchange_in_body", methods=["GET"])
+def exchange_in_body(): return token_in_body("Jwt Exchange Token In Body")
+
+
+@mock_app.route("/exchange_in_header", methods=["GET"])
+def exchange_in_header(): return token_in_header("Jwt Exchange Token In Header")
+
+
+@mock_app.route("/refresh_in_header", methods=["GET"])
+def refresh_in_header(): return token_in_header("Jwt Refresh Token In Header")
+
+
+@mock_app.route("/refresh_in_body", methods=["GET"])
+def refresh_in_body(): return token_in_body("Jwt Refresh Token In Body")
+
+
+@mock_app.route("/post_method_json", methods=["POST"])
+def post_method_json():
+    if request.json["username"] and request.json["pwd"]:
+        rsp = base_json_response()
+        rsp.data = json.dumps({"procCode": 200})
+        return rsp
+
+
+@mock_app.route("/post_method_variable/<int:id>", methods=["POST"])
+def post_method_variable(id):
+    rsp = base_json_response()
+    rsp.data = json.dumps({"procCode": 200, "path_variable": id})
+    return rsp
+
+
+@mock_app.route("/post_method_path_variable", methods=["POST"])
+def post_method_path_variable():
+    rsp = base_json_response()
+    rsp.data = json.dumps({"procCode": 200, "path_variable": int(request.args.get("id"))})
+    return rsp
+
+
+@mock_app.route("/put_method_json", methods=["PUT"])
+def put_method_json():
+    if request.json["username"] and request.json["pwd"]:
+        rsp = base_json_response()
+        rsp.data = json.dumps({"procCode": 200})
+        return rsp
+
+
+@mock_app.route("/put_method_variable/<int:id>", methods=["PUT"])
+def put_method_variable(id):
+    rsp = base_json_response()
+    rsp.data = json.dumps({"procCode": 200, "path_variable": id})
+    return rsp
+
+
+@mock_app.route("/put_method_path_variable", methods=["PUT"])
+def put_method_path_variable():
+    rsp = base_json_response()
+    rsp.data = json.dumps({"procCode": 200, "path_variable": int(request.args.get("id"))})
+    return rsp
+
+
+@mock_app.route("/delete_method_json", methods=["DELETE"])
+def delete_method_json():
+    if request.json["username"] and request.json["pwd"]:
+        rsp = base_json_response()
+        rsp.data = json.dumps({"procCode": 200})
+        return rsp
+
+
+@mock_app.route("/delete_method_variable/<int:id>", methods=["DELETE"])
+def delete_method_variable(id):
+    rsp = base_json_response()
+    rsp.data = json.dumps({"procCode": 200, "path_variable": id})
+    return rsp
+
+
+@mock_app.route("/delete_method_path_variable", methods=["DELETE"])
+def delete_method_path_variable():
+    rsp = base_json_response()
+    rsp.data = json.dumps({"procCode": 200, "path_variable": int(request.args.get("id"))})
+    return rsp
+
+
+@mock_app.route("/get_method_variable/<int:id>", methods=["GET"])
+def get_method_variable(id):
+    rsp = base_json_response()
+    rsp.data = json.dumps({"procCode": 200, "path_variable": id})
+    return rsp
+
+
+@mock_app.route("/get_method_path_variable", methods=["GET"])
+def get_method_path_variable():
+    rsp = base_json_response()
+    rsp.data = json.dumps({"procCode": 200, "path_variable": int(request.args.get("id"))})
+    return rsp
+
+
+@mock_app.route("/download_file", methods=["POST"])
+def download_file():
+    return send_file('download_file.txt')
+
+
+@mock_app.route("/upload_file", methods=["POST"])
+def upload_file():
+    file = request.files['file']
+    file.save(os.path.join(os.path.dirname(__file__), "aiai", "upload_target.txt"))
+    rsp = base_json_response()
+    rsp.data = json.dumps({"procCode": 200})
+    return rsp
+
+
+@mock_app.route("/company", methods=["GET"])
+def company():
+    company_id = request.args["id"]
+    rsp = Response()
+    ret = list(filter(lambda c: c.get("id") == int(company_id), __mock_data["companies"]))[0]
+    rsp.data = json.dumps(ret)
+    return rsp
+
+
+@mock_app.route("/companies", methods=["GET"])
+def all_companies(): pass
+
+
+@mock_app.route("/companies", methods=["DELETE"])
+def fire_employee(): pass
+
+
+@mock_app.route("/employee", methods=["PUT"])
+def update_employee(): pass
+
+
+if __name__ == '__main__':
+    mock_app.run()
