@@ -153,6 +153,13 @@ def upload_file():
     return rsp
 
 
+@mock_app.route("/test_headers", methods=["GET"])
+def headers_tester():
+    rsp = base_json_response()
+    rsp.data = json.dumps({"procCode": 200, "headers": dict(request.headers)})
+    return rsp
+
+
 @mock_app.route("/company", methods=["GET"])
 def company():
     company_id = request.args["id"]
