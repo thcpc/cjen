@@ -4,30 +4,64 @@ from cjen import BigTangerine
 import cjen
 
 
-class TestObj(BigTangerine):
+class HeaderMockService(BigTangerine):
 
-    @cjen.headers.basicHeaders(headers=dict(xx=1))
+    @cjen.http.base_url(uri="http://127.0.0.1:5000")
+    @cjen.headers.basicHeaders(headers=dict(Basicheader="1"))
     def __init__(self): super().__init__()
 
-    @cjen.headers.appendBasicHeaders(headers=dict(zz=3))
-    @cjen.headers.addHeaders(value=dict(cheng="yyyx"))
-    @cjen.headers.contentType(value="yyy")
-    @cjen.headers.accept(value="xxx")
-    @cjen.headers.appendBasicHeaders(headers=dict(jj=4))
-    def post(self, *args, **kwargs):
-        assert kwargs.get("headers").get("Content-Type") == "yyy"
-        assert kwargs.get("headers").get("Accept") == "xxx"
-        assert kwargs.get("headers").get("cheng") == "yyyx"
-        return "success"
+    @cjen.http.get_mapping(uri="test_headers")
+    def basic_headers(self, resp=None, **kwargs):
+        assert resp.get("headers")["Basicheader"] == self.headers["Basicheader"]
+
+    @cjen.headers.appendBasicHeaders(headers=dict(Appendbasicheaders="2"))
+    @cjen.http.get_mapping(uri="test_headers")
+    def append_basic_headers(self, resp=None, **kwargs):
+        assert resp.get("headers")["Basicheader"] == self.headers["Basicheader"]
+        assert resp.get("headers")["Appendbasicheaders"] == self.headers["Appendbasicheaders"]
+
+    @cjen.headers.addHeaders(headers=dict(Newheader="3"))
+    @cjen.http.get_mapping(uri="test_headers")
+    def add_headers(self, resp=None, **kwargs):
+        assert resp.get("headers")["Basicheader"] == self.headers["Basicheader"]
+        assert resp.get("headers")["Newheader"] == "3"
+        assert self.headers.get("Newheader") is None
+
+    @cjen.headers.contentType(value="4")
+    @cjen.http.get_mapping(uri="test_headers")
+    def add_content_type(self, resp=None, **kwargs):
+        assert resp.get("headers")["Basicheader"] == self.headers["Basicheader"]
+        assert resp.get("headers")["Content-Type"] == "4"
+        assert self.headers.get("Content-Type") is None
+
+    @cjen.headers.accept(value="5")
+    @cjen.http.get_mapping(uri="test_headers")
+    def add_accept(self, resp=None, **kwargs):
+        assert resp.get("headers")["Basicheader"] == self.headers["Basicheader"]
+        assert resp.get("headers")["Accept"] == "5"
+        assert self.headers.get("Accept") is None
 
 
-def test_headers():
-    t = TestObj()
-    assert t.post() == "success"
-    assert t.headers.get("xx") == 1
-    assert t.headers.get("zz") == 3
-    assert t.headers.get("jj") == 4
+def test_basic_headers():
+    mock = HeaderMockService()
+    mock.basic_headers()
 
 
-if __name__ == '__main__':
-    pytest.main(["test_header.py"])
+def test_append_basic_headers():
+    mock = HeaderMockService()
+    mock.append_basic_headers()
+
+
+def test_add_headers():
+    mock = HeaderMockService()
+    mock.add_headers()
+
+
+def test_add_content_type():
+    mock = HeaderMockService()
+    mock.add_content_type()
+
+
+def test_add_accept():
+    mock = HeaderMockService()
+    mock.add_accept()
