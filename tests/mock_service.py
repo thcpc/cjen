@@ -5,12 +5,12 @@ from flask import Flask
 from flask import request, Response, send_file
 
 mock_app = Flask(__name__)
-__mock_data = {"companies": [dict(id=1, name="CO1"), dict(id=2, name="CO2")],
-               "employees": [dict(id=1, name="EO1", company_id=1),
-                             dict(id=2, name="EO2", company_id=1),
-                             dict(id=3, name="EO3", company_id=1),
-                             dict(id=4, name="EO4", company_id=2),
-                             dict(id=5, name="EO5", company_id=2),
+__mock_data = {"companies": [dict(id=1, name="C01"), dict(id=2, name="C02")],
+               "employees": [dict(id=1, name="E01", company_id=1),
+                             dict(id=2, name="E02", company_id=1),
+                             dict(id=3, name="E03", company_id=1),
+                             dict(id=4, name="E04", company_id=2),
+                             dict(id=5, name="E05", company_id=2),
                              ]}
 
 
@@ -160,21 +160,26 @@ def headers_tester():
     return rsp
 
 
-@mock_app.route("/company", methods=["GET"])
-def company():
-    company_id = request.args["id"]
-    rsp = Response()
-    ret = list(filter(lambda c: c.get("id") == int(company_id), __mock_data["companies"]))[0]
-    rsp.data = json.dumps(ret)
+@mock_app.route("/company/<int:company_id>", methods=["GET"])
+def company(company_id):
+    rsp = base_json_response()
+    ret = list(filter(lambda c: c.get("id") == company_id, __mock_data["companies"]))[0]
+    rsp.data = json.dumps({**{"procCode": 200}, **ret})
     return rsp
 
 
 @mock_app.route("/companies", methods=["GET"])
-def all_companies(): pass
+def all_companies():
+    rsp = base_json_response()
+    rsp.data = json.dumps({"procCode": 200, "companies": __mock_data["companies"]})
+    return rsp
 
 
-@mock_app.route("/companies", methods=["DELETE"])
-def fire_employee(): pass
+@mock_app.route("/all_employees", methods=["GET"])
+def all_employees():
+    rsp = base_json_response()
+    rsp.data = json.dumps({"procCode": 200, "employees": __mock_data["employees"]})
+    return rsp
 
 
 @mock_app.route("/employee", methods=["PUT"])
