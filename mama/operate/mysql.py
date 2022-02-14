@@ -48,19 +48,18 @@ def type_str_datetime(*, fmt: str): pass
 
 def factory(*, cursor: Cursor, clazz, sql: str, params=None, size=1, track=False):
     """
-    TODO 需要测试数据库异常的时候，配合其它装饰器有何影响
-    使用条件: 作用在 类型 BigTangerine 或 其子类的 对象
-    位置：放在http.post_mapping 等请求装饰器之后
-    作用：创建针对MYSQL 的 MetaData
-    1. 支持返回一个对象 或 对象列表
-    2. 只支持查询语句
+    使用条件: 作用在 类型 BigTangerine 或 其子类的 对象 \n
+    位置：放在http.post_mapping 等请求装饰器之后 \n
+    作用：创建针对MYSQL 的 MetaData \n
+    注意：只支持查询语句
+
     :param track: 是否打开日志，记录查询SQL
     :param cursor:
     :param size: -1 代表取所有的,
     :param params: sql的查询条件,
     :param sql: 查询的 sql
     :param clazz:
-    :return:
+    :return: 支持返回一个对象 或 对象列表
     """
 
     def __wrapper__(func):
