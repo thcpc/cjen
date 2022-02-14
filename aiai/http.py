@@ -89,53 +89,113 @@ def base_url(*, uri: str):
 
 
 def _delete(func):
+    @_http_headers
+    @_http_json(method=requests.delete)
+    @_http_default(method=requests.delete)
     def __inner__(ins: BigTangerine, *args, **kwargs):
-        headers = {**ins.headers, **kwargs.get("headers")} if kwargs.get("headers") else ins.headers
-        if headers.get("Content-Type") and "json" in headers.get("Content-Type"):
-            kwargs["resp"] = requests.delete(url=kwargs["url"], headers=headers, json=kwargs.get("data"))
-        else: kwargs["resp"] = requests.delete(url=kwargs["url"], headers=headers, data=kwargs.get("data"))
         return func(ins, *args, **kwargs)
 
     return __inner__
 
 
+def _http_headers(func):
+    def __inner__(ins: BigTangerine, *args, **kwargs):
+        kwargs["headers"] = {**ins.headers, **kwargs.get("headers")} if kwargs.get("headers") else ins.headers
+        return func(ins, *args, **kwargs)
+
+    return __inner__
+
+
+def _resp_is_not_none(**kwargs): return kwargs.get("resp") is None
+
+
+def _have_content_type(**kwargs): return kwargs["headers"].get("Content-Type") is not None
+
+
+def _is_json(**kwargs): return "json" in kwargs["headers"].get("Content-Type")
+
+
+def _is_upload(**kwargs): return "multipart/form-data" in kwargs["headers"].get("Content-Type")
+
+
+def _http_json(*, method):
+    def __wrapper__(func):
+        def __inner__(ins: BigTangerine, *args, **kwargs):
+            if _resp_is_not_none(**kwargs) and _have_content_type(**kwargs) and _is_json(**kwargs):
+                kwargs["resp"] = method(url=kwargs["url"], headers=kwargs["headers"], json=kwargs.get("data"))
+            return func(ins, *args, **kwargs)
+
+        return __inner__
+
+    return __wrapper__
+
+
+def _http_file(*, method):
+    def __wrapper__(func):
+        def __inner__(ins: BigTangerine, *args, **kwargs):
+            if _resp_is_not_none(**kwargs) and _have_content_type(**kwargs) and _is_upload(**kwargs):
+                kwargs["resp"] = method(url=kwargs["url"], headers=kwargs["headers"], data=kwargs.get("form_data"))
+            return func(ins, *args, **kwargs)
+
+        return __inner__
+
+    return __wrapper__
+
+
+def _http_default(*, method):
+    def __wrapper__(func):
+        def __inner__(ins: BigTangerine, *args, **kwargs):
+            if _resp_is_not_none(**kwargs):
+                kwargs["resp"] = method(url=kwargs["url"], headers=kwargs["headers"], data=kwargs.get("data"))
+            return func(ins, *args, **kwargs)
+
+        return __inner__
+
+    return __wrapper__
+
+
 def _get(func):
     def __inner__(ins: BigTangerine, *args, **kwargs):
         headers = {**ins.headers, **kwargs.get("headers")} if kwargs.get("headers") else ins.headers
-        kwargs["resp"] = requests.get(url=kwargs["url"], headers=headers,
-                                      params=kwargs.get("params"))
+        kwargs["resp"] = requests.get(url=kwargs["url"], headers=headers, params=kwargs.get("params"))
         return func(ins, *args, **kwargs)
 
     return __inner__
 
 
 def _post(func):
+    @_http_headers
+    @_http_json(method=requests.post)
+    @_http_file(method=requests.post)
+    @_http_default(method=requests.post)
     def __inner__(ins: BigTangerine, *args, **kwargs):
-        headers = {**ins.headers, **kwargs.get("headers")} if kwargs.get("headers") else ins.headers
-        if headers.get("Content-Type") and "json" in headers.get("Content-Type"):
-            kwargs["resp"] = requests.post(url=kwargs["url"], headers=headers, json=kwargs.get("data"))
-        elif headers.get("Content-Type") and "multipart/form-data" in headers.get("Content-Type"):
-            kwargs["resp"] = requests.post(url=kwargs["url"], headers=headers, data=kwargs.get("form_data"))
-        else:
-            kwargs["resp"] = requests.post(url=kwargs["url"], headers=headers, data=kwargs.get("data"))
         return func(ins, *args, **kwargs)
 
     return __inner__
 
 
 def _put(func):
+    @_http_headers
+    @_http_json(method=requests.put)
+    @_http_default(method=requests.put)
     def __inner__(ins: BigTangerine, *args, **kwargs):
-        headers = {**ins.headers, **kwargs.get("headers")} if kwargs.get("headers") else ins.headers
-        if headers.get("Content-Type") and "json" in headers.get("Content-Type"):
-            kwargs["resp"] = requests.put(url=kwargs["url"], headers=headers, json=kwargs.get("data"))
-        else:
-            kwargs["resp"] = requests.put(url=kwargs["url"], headers=headers, data=kwargs.get("data"))
         return func(ins, *args, **kwargs)
 
     return __inner__
 
 
 def get_mapping(*, uri: str):
+    """
+    使用范围：BigTangerine 或其 子类对象
+
+    位置：装饰函数的上层装饰器. 如果有使用Header装饰器，在Header装饰器之后，如果没有 则是顶层装饰器
+
+    发送 GET 请求，并返回结果
+
+    :param uri:
+    :return:
+    """
+
     def __wrapper__(func):
         @_get_method_params(method=func)
         @_check_instance(decorator="http.get_mapping", expect=BigTangerine)
@@ -155,8 +215,11 @@ def get_mapping(*, uri: str):
 def post_mapping(*, uri: str):
     """
     使用范围：BigTangerine 或其 子类对象
-    位置：装饰函数的顶层装饰器
+
+    位置：装饰函数的上层装饰器，如果有使用Header装饰器，在Header装饰器之后，如果没有 则是顶层装饰器
+
     发送 Post 请求，并返回结果
+
     :param uri:
     :return:
     """
@@ -180,8 +243,11 @@ def post_mapping(*, uri: str):
 def put_mapping(*, uri: str):
     """
     使用范围：BigTangerine 或其 子类对象
-    位置：装饰函数的顶层装饰器
+
+    位置：装饰函数的上层装饰器，如果有使用Header装饰器，在Header装饰器之后，如果没有 则是顶层装饰器
+
     发送 PUT 请求，并返回结果
+
     :param uri:
     :return:
     """
@@ -205,8 +271,11 @@ def put_mapping(*, uri: str):
 def upload_mapping(*, uri: str):
     """
     使用范围：BigTangerine 或其 子类对象
-    位置：装饰函数的顶层装饰器
+
+    位置：装饰函数的上层装饰器，如果有使用Header装饰器，在Header装饰器之后，如果没有 则是顶层装饰器
+
     发送 上传文件 请求，并返回结果
+
     :param uri:
     :return:
     """
@@ -231,8 +300,11 @@ def upload_mapping(*, uri: str):
 def delete_mapping(*, uri: str):
     """
     使用范围：BigTangerine 或其 子类对象
-    位置：装饰函数的顶层装饰器
+
+    位置：位置：装饰函数的上层装饰器，如果有使用Header装饰器，在Header装饰器之后，如果没有 则是顶层装饰器
+
     发送 delete 请求，并返回结果
+
     :param uri:
     :return:
     """
