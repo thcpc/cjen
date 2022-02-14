@@ -69,7 +69,7 @@ class CMysql(BigTangerine):
         assert employees[1].company() == 'C01'
 
     @cjen.operate.mysql.factory(cursor=cursor(), clazz=Employee,
-                                sql=FileHelper.read(os.path.dirname(__file__), "employees_of_company.sql"),
+                                sql=FileHelper.cur_read(cur=__file__, file="employees_of_company.sql"),
                                 params=ContextArgs(id="company_id"), size=-1)
     def get_c01_employees(self, employees: list[Employee], **kwargs):
         assert len(employees) == 7
