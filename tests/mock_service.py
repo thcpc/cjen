@@ -182,8 +182,11 @@ def all_employees():
     return rsp
 
 
-@mock_app.route("/employee", methods=["PUT"])
-def update_employee(): pass
+@mock_app.route("/none_field_response", methods=["GET"])
+def none_field_response():
+    rsp = base_json_response()
+    rsp.data = json.dumps({"procCode": 200, "employees": None})
+    return rsp
 
 
 if __name__ == '__main__':
