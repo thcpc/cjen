@@ -35,14 +35,13 @@ def jwt(*, key: str, json_path: str, jwt_from: JWTFrom = JWTFrom.BODY, action: J
     def __wrapper__(func):
         # @_get_method_params(method=func)
         def __inner__(ins: BigTangerine, *args, **kwargs):
-            rsp = func(ins, *args, **kwargs)
-            rsp = rsp if jwt_from == JWTFrom.BODY else kwargs.get("response_content").headers
+            rsp = kwargs.get("resp") if jwt_from == JWTFrom.BODY else dict(kwargs.get("response_content").headers)
             if not jsonpath.jsonpath(rsp, json_path):
                 if action == JWTAction.INIT or action == JWTAction.EXCHANGE:
                     raise JwtWrongErr(f"can not find jwt key in {rsp}")
             else:
                 ins.headers[key] = jsonpath.jsonpath(rsp, json_path)[0] if json_path else rsp
-            return rsp
+            return func(ins, *args, **kwargs)
 
         return __inner__
 
