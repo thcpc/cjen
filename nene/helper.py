@@ -9,13 +9,14 @@ class FileHelper(object):
             return f.read()
 
     @classmethod
-    def cur_read(cls, file):
+    def cur_read(cls, *, cur, file):
         """
-        读取与执行文件下的同一路径文件
+        与期望文件文件同一路径文件
+        :param cur: 文件的__file__参数
         :param file: 文件名
         :return:
         """
-        return cls.read(os.path.curdir, file)
+        return cls.read(os.path.dirname(cur), file)
 
     @classmethod
     def replace(cls, rep: dict, *path):
