@@ -57,12 +57,12 @@ def contentType(*, value: str):
     return __wrapper__
 
 
-def addHeaders(*, value: dict):
+def addHeaders(*, headers: dict):
     def __wrapper__(func):
         @_get_method_params(method=func)
         @_check_instance(decorator="headers.addHeaders", expect=BigTangerine)
         def __inner__(instance: BigTangerine, *args, **kwargs):
-            kwargs["headers"] = {**kwargs.get("headers", value), **value}
+            kwargs["headers"] = {**kwargs.get("headers", headers), **headers}
             return func(instance, *args, **kwargs)
 
         return __inner__

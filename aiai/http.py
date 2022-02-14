@@ -53,7 +53,7 @@ def _response(func):
         if kwargs.get("resp").status_code == 200:
             if "application/json" in kwargs.get("resp").headers.get("Content-Type"):
                 kwargs["response_content"] = kwargs.get("resp")
-                kwargs["resp"] = kwargs.get("resp").json()
+                kwargs["resp"] = kwargs.get("resp").json() if kwargs.get("resp").content else None
                 return func(ins, *args, **kwargs)
             kwargs["resp"] = kwargs.get("resp").content
             return func(ins, *args, **kwargs)
@@ -91,8 +91,9 @@ def base_url(*, uri: str):
 def _delete(func):
     def __inner__(ins: BigTangerine, *args, **kwargs):
         headers = {**ins.headers, **kwargs.get("headers")} if kwargs.get("headers") else ins.headers
-        kwargs["resp"] = requests.delete(url=kwargs["url"], headers=headers,
-                                         data=kwargs.get("data"))
+        if headers.get("Content-Type") and "json" in headers.get("Content-Type"):
+            kwargs["resp"] = requests.delete(url=kwargs["url"], headers=headers, json=kwargs.get("data"))
+        else: kwargs["resp"] = requests.delete(url=kwargs["url"], headers=headers, data=kwargs.get("data"))
         return func(ins, *args, **kwargs)
 
     return __inner__
