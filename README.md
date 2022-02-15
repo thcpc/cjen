@@ -196,7 +196,7 @@ class Company(MetaMysql):
 
 ## 4.3 MetaMysql 装饰器
 
-![metamysql](metamysql.png)
+![metamysql](metaMysql.png)
 
 | 装饰器                     | 参数   | 作用                                                     | 代码示例 |
 | -------------------------- | ------ | -------------------------------------------------------- | -------- |
