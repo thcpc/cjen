@@ -3,7 +3,7 @@
 
 # 2 主要思想
 
-通过BigTangerine 来定义接口， 然后通过MetaData 来定义需要验证的数据对象，在BigTangerine 中定义的接口。
+通过<a href="###3.1.1 BigTangerine">BigTangerine</a> 来定义接口， 然后通过<a href="##3.2 数据类">MetaData</a> 来定义需要验证的数据对象，在<a href="###3.1.1 BigTangerine">BigTangerine</a> 中定义的接口。
 
 # 3 主要使用类
 ## 3.1 入口类
@@ -112,7 +112,7 @@ class Company(MetaMysql):
 
 
 
-![deco1](.\deco1.png)
+![deco1](deco1.png)
 
 
 
@@ -164,7 +164,7 @@ class Company(MetaMysql):
 
 ## 4.2 MetaJson 装饰器
 
-![metaJson](.\metajson.png)
+![metaJson](metajson.png)
 
 ###  4.2.1 (value)返回值装饰器 
 
@@ -196,7 +196,7 @@ class Company(MetaMysql):
 
 ## 4.3 MetaMysql 装饰器
 
-![metamysql](.\metamysql.png)
+![metamysql](metamysql.png)
 
 | 装饰器                     | 参数   | 作用                                                     | 代码示例 |
 | -------------------------- | ------ | -------------------------------------------------------- | -------- |
