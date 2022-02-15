@@ -103,7 +103,7 @@ def addHeaders(*, headers: dict):
 
     位置：针对装饰器所在的函数，发送请求时，临时新增的Header.
 
-    作用: 新增临时Header
+    作用: 新增临时 Header
 
     :param headers:
     :return:
