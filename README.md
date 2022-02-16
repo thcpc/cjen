@@ -144,10 +144,10 @@ class Company(MetaMysql):
 
 ### 4.3.3 Factory 装饰器
 
-| 装饰器                      | 参数                                                         | 作用              | 代码示例                                            |
-| --------------------------- | ------------------------------------------------------------ | ----------------- | --------------------------------------------------- |
-| @cjen.operate.mysql.factory | <ul><li>cursor(required): pymysql.cursors.Cursor</li><li>clazz(required): MetaMysql</li><li>sql(required): str</li><li>params(Optinal)</li><li>size(optinal): int, 1 or -1, default 1</li><li>track(optinal): boolean default False</li></ul> | 创建MetaMysql对象 | <ul><li><a href="## Factory 创建 Mysql Meta">一条记录</a></li><li><a href="## Factory 创建 Mysql Meta">多条记录</a></li><li><a href="## Factory 创建 Mysql Meta">SQL带参数查询</a></li></ul>|
-| @cjen.operate.json.factory  | clazz(required): MetaJson                                    | 创建 MetaJson对象 | <a href="##Factory 创建 Json Meta">创建Json对象</a>                                        |
+| 装饰器                      | 参数                                                         | 作用              | 代码示例                                                                                                                      |
+| --------------------------- | ------------------------------------------------------------ | ----------------- |---------------------------------------------------------------------------------------------------------------------------|
+| @cjen.operate.mysql.factory | <ul><li>cursor(required): pymysql.cursors.Cursor</li><li>clazz(required): MetaMysql</li><li>sql(required): str</li><li>params(Optinal)</li><li>size(optinal): int, 1 or -1, default 1</li><li>track(optinal): boolean default False</li></ul> | 创建MetaMysql对象 | <ul><li>[一条记录](#Factory创建MysqlMeta)</li><li>[多条记录](#Factory创建MysqlMeta)</li><li>[SQL带参数查询](#Factory创建MysqlMeta)</li></ul> |
+| @cjen.operate.json.factory  | clazz(required): MetaJson                                    | 创建 MetaJson对象 | [创建Json对象](#Factory创建JsonMeta)                                                                                                             |
 
 
 
