@@ -6,7 +6,18 @@ from cjen.mama.meta_data import MetaData
 ALL_FIELDS = "ALL_FIELDS"
 
 
+# TODO 待实现
 def validation_all_metas(func):
+    """
+    使用条件: BigTangerine 及其 子类 对象
+
+    位置：json.factory 或 mysql.factory 之后
+
+    作用：执行对象函数所有 MetaData 参数的中含有asserts装饰器的方法
+    :param func:
+    :return:
+    """
+
     @_get_method_params(method=func)
     @_check_instance(decorator="orange.assert.validation_fields", expect=BigTangerine)
     def __inner__(ins: BigTangerine, *args, **kwargs):
