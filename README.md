@@ -3,10 +3,10 @@
 
 # 2 主要思想
 
-通过[BigTangerine](README.md/##3.1.BigTangerine) 来定义接口， 然后通过[MetaData](###3.2 数据类) 来定义需要验证的数据对象，在[BigTangerine](###3.1.1 BigTangerine)中定义的接口。
+通过[BigTangerine](#BigTangerine) 来定义接口， 然后通过[MetaData](###3.2 数据类) 来定义需要验证的数据对象，在[BigTangerine](###3.1.1 BigTangerine)中定义的接口。
 
 # 3 主要使用类
-## 3.1.BigTangerine
+## <a id="BigTangerine" style="color:black">3.1 BigTangerine</a>
 
 主要的入口类，所有的装饰器都是应用在该类或其子类的方法上
 示例代码
