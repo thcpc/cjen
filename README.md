@@ -219,7 +219,7 @@ class Company(MetaMysql):
 
 # 5 代码示例
 
-##  <a id="BasicHeader" style="color:black">定义基准Headers</a>
+##  定义基准Headers
 
 ```python
 class HeaderMockService(BigTangerine):
