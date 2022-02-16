@@ -3,7 +3,7 @@
 
 # 2 主要思想
 
-通过[BigTangerine](#BigTangerine) 来定义接口， 然后通过[MetaData](###3.2 数据类) 来定义需要验证的数据对象，在[BigTangerine](###3.1.1 BigTangerine)中定义的接口。
+通过[BigTangerine](#BigTangerine) 来定义接口， 然后通过[MetaData](#MetaData) 来定义需要验证的数据对象，在[BigTangerine](#BigTangerine)中定义的接口。
 
 # 3 主要使用类
 ## <a id="BigTangerine" style="color:black">3.1 BigTangerine</a>
@@ -75,7 +75,7 @@ class Customer(BigTangerine):
 
 
 
-## 3.2.MetaData
+## <a id="MetaData" style="color:black">3.2 MetaData</a>
 
 ### 3.2.1 MetaJson
 根据Json对象生成的数据对象,可用json_path来获取期望的值
@@ -119,13 +119,13 @@ class Company(MetaMysql):
 
 ### 4.3.1 Header 装饰器
 
-| 装饰器                           | 参数                    | 作用                                                     | 代码示例                                       |
-| -------------------------------- | ----------------------- | -------------------------------------------------------- | ---------------------------------------------- |
-| @cjen.headers.basicHeaders       | headers(required): dict | 初始化 Basic Header, Basic Header 是作为基准 Header 存在 | [定义基准Headers](##定义基准Headers)           |
-| @cjen.headers.appendBasicHeaders | headers(required): dict | 增加 Basic Header                                        | [增加基准Headers](##增加基准Headers)           |
-| @cjen.headers.addHeaders         | headers(required): dict | 新增临时 Header                                          | [添加临时Headers](##添加临时Headers)           |
-| @cjen.headers.contentType        | value(required): str    | 新增临时 Content-Type Header                             | [添加临时Content-Type](##添加临时Content-Type) |
-| @cjen.headers.accept             | value(required): str    | 新增临时 Accept Header                                   | [添加临时Accept](##添加临时Accept)               |
+| 装饰器                           | 参数                    | 作用                                                     | 代码示例                                    |
+| -------------------------------- | ----------------------- | -------------------------------------------------------- | ------------------------------------------- |
+| @cjen.headers.basicHeaders       | headers(required): dict | 初始化 Basic Header, Basic Header 是作为基准 Header 存在 | [定义基准Headers](#BasicHeader)             |
+| @cjen.headers.appendBasicHeaders | headers(required): dict | 增加 Basic Header                                        | [增加基准Headers](#AppendBasicHeader)       |
+| @cjen.headers.addHeaders         | headers(required): dict | 新增临时 Header                                          | [添加临时Headers](#AddTempHeader)           |
+| @cjen.headers.contentType        | value(required): str    | 新增临时 Content-Type Header                             | [添加临时Content-Type](#AddTempContentType) |
+| @cjen.headers.accept             | value(required): str    | 新增临时 Accept Header                                   | [添加临时Accept](#AddTempAccept)            |
 
 
 
@@ -133,12 +133,12 @@ class Company(MetaMysql):
 
 | 装饰器                    | 参数               | 作用                           | 代码示例                                                     |
 | ------------------------- | ------------------ | ------------------------------ | ------------------------------------------------------------ |
-| @cjen.http.post_mapping   | uri(required): str | 发送 Post 请求，并返回结果     | <ul><li><a href="##POST 请求">下载文件</a></li><li><a href="##POST 请求">带参数url</a></li><li><a href="##POST 请求">请求体为JSON</a></li></ul> |
-| @cjen.http.get_mapping    | uri(required): str | 发送 GET 请求，并返回结果      | <a href="##GET 请求">带参url</a>                                      |
+| @cjen.http.post_mapping   | uri(required): str | 发送 Post 请求，并返回结果     | <ul><li><a href="#PostMapping">下载文件</a></li><li><a href="##POST 请求">带参数url</a></li><li><a href="##POST 请求">请求体为JSON</a></li></ul> |
+| @cjen.http.get_mapping    | uri(required): str | 发送 GET 请求，并返回结果      | <a href="##GET 请求">带参url</a>                             |
 | @cjen.http.put_mapping    | uri(required): str | 发送 PUT 请求，并返回结果      | <ul><li><a href="##PUT 请求">带参URL</a></li><li><a href="##PUT 请求">请求体为JSON</a></li></ul> |
 | @cjen.http.delete_mapping | uri(required): str | 发送 delete 请求，并返回结果   | <ul><li><a href="##DELETE 请求">带参URL</a></li><li><a href="##DELETE 请求">请求体为JSON</a></li></ul> |
-| @cjen.http.upload_mapping | uri(required): str | 发送 上传文件 请求，并返回结果 | [上传文件](##上传文件)                                     |
-| @cjen.http.base_url       | uri(required): str | 设置访问的地址                 | <a href="##POST 请求">设置访问地址</a>                                |
+| @cjen.http.upload_mapping | uri(required): str | 发送 上传文件 请求，并返回结果 | [上传文件](##上传文件)                                       |
+| @cjen.http.base_url       | uri(required): str | 设置访问的地址                 | <a href="##POST 请求">设置访问地址</a>                       |
 
 
 
@@ -219,7 +219,7 @@ class Company(MetaMysql):
 
 # 5 代码示例
 
-##  定义基准Headers
+##  <a id="BasicHeader" style="color:black">定义基准Headers</a>
 
 ```python
 class HeaderMockService(BigTangerine):
@@ -230,7 +230,7 @@ class HeaderMockService(BigTangerine):
 
 
 
-## 增加基准Headers
+## <a id="AppendBasicHeader" style="color:black">增加基准Headers</a>
 
 ```python
 class HeaderMockService(BigTangerine):
@@ -248,7 +248,7 @@ class HeaderMockService(BigTangerine):
 
 
 
-## 添加临时Headers
+## <a id="AddTempHeader" style="color:black">添加临时Headers</a>
 
 ```python
 class HeaderMockService(BigTangerine):
@@ -266,7 +266,7 @@ class HeaderMockService(BigTangerine):
         assert self.headers.get("Newheader") is None
 ```
 
-##　添加临时Content-Type
+##　<a id="AddTempContentType" style="color:black">添加临时Content-Type</a>
 
 ```python
 class HeaderMockService(BigTangerine):
@@ -286,7 +286,7 @@ class HeaderMockService(BigTangerine):
 
 
 
-## 添加临时Accept
+## <a id="AddTempAccept" style="color:black">添加临时Accept</a>
 
 ```python
 class HeaderMockService(BigTangerine):
@@ -306,7 +306,7 @@ class HeaderMockService(BigTangerine):
 
 
 
-## GET请求
+## <a id="GetMapping" style="color:black">GET请求</a>
 
 ```python
 class MockService(BigTangerine):
@@ -340,7 +340,7 @@ class MockService(BigTangerine):
 
 
 
-## POST请求
+## <a id="PostMapping" style="color:black">POST请求</a>
 
 ```python
 class MockService(BigTangerine):
@@ -397,7 +397,7 @@ class MockService(BigTangerine):
 
 
 
-## PUT请求
+## <a id="PutMapping" style="color:black">PUT请求</a>
 
 ```python
 class MockService(BigTangerine):
@@ -434,7 +434,7 @@ class MockService(BigTangerine):
     def put_method_path_variable(self, *, path_variable, resp=None, **kwargs): ...
 ```
 
-## DELETE请求
+## <a id="DeleteMapping" style="color:black">DELETE请求</a>
 
 ```python
 class MockService(BigTangerine):
@@ -473,7 +473,7 @@ class MockService(BigTangerine):
 
 
 
-## 上传文件
+## <a id="UploadMapping" style="color:black">上传文件</a>
 
 ```python
 class MockService(BigTangerine):
