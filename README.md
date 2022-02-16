@@ -3,11 +3,11 @@
 
 # 2 主要思想
 
-通过[BigTangerine](###3.1.1 BigTangerine) 来定义接口， 然后通过[MetaData](###3.2 数据类) 来定义需要验证的数据对象，在[BigTangerine](###3.1.1 BigTangerine)中定义的接口。
+通过[BigTangerine](##3.1.BigTangerine) 来定义接口， 然后通过[MetaData](###3.2 数据类) 来定义需要验证的数据对象，在[BigTangerine](###3.1.1 BigTangerine)中定义的接口。
 
 # 3 主要使用类
-## 3.1 入口类
-### 3.1.1 BigTangerine
+## 3.1.BigTangerine
+
 主要的入口类，所有的装饰器都是应用在该类或其子类的方法上
 示例代码
 
@@ -21,7 +21,7 @@ class MockService(BigTangerine):
     def post_method_json(self, *, data, resp=None, **kwargs):
         assert resp.get("procCode") == 200
 ```
-### 3.1.2 如何定义
+### 3.1.1 如何定义
 
 ```python
 #  继承BigTangerine
@@ -59,7 +59,7 @@ class 自定义类名(BigTangerine):
 
 <p style="color: red">在方法定义中，如果使用了<a href="###4.3.2 Http 装饰器">Http装饰器</a>，则不要在方法中去return, 因为该架构目标设计是在方法中添加测试验证，而不是取值操作，值的传递可以使用 <a href="###3.1.3 上下文">上下文</a> 控制</p>
 
-### 3.1.3 上下文
+### 3.1.2 上下文
 
 如果接口有依赖关系，则可以使用"上下文"来做值传递
 
@@ -75,7 +75,7 @@ class Customer(BigTangerine):
 
 
 
-## 3.2 数据类
+## 3.2.MetaData
 
 ### 3.2.1 MetaJson
 根据Json对象生成的数据对象,可用json_path来获取期望的值
