@@ -3,13 +3,14 @@
 
 # 2 主要思想
 
-通过<a href="###3.1.1 BigTangerine">BigTangerine</a> 来定义接口， 然后通过<a href="##3.2 数据类">MetaData</a> 来定义需要验证的数据对象，在<a href="###3.1.1 BigTangerine">BigTangerine</a> 中定义的接口。
+通过[BigTangerine](###3.1.1 BigTangerine) 来定义接口， 然后通过[MetaData](###3.2 数据类) 来定义需要验证的数据对象，在[BigTangerine](###3.1.1 BigTangerine)中定义的接口。
 
 # 3 主要使用类
 ## 3.1 入口类
 ### 3.1.1 BigTangerine
 主要的入口类，所有的装饰器都是应用在该类或其子类的方法上
 示例代码
+
 ```python
 class MockService(BigTangerine):
     @cjen.http.base_url(uri="http://127.0.0.1:5000")
@@ -305,7 +306,7 @@ class HeaderMockService(BigTangerine):
 
 
 
-## GET 请求
+## GET请求
 
 ```python
 class MockService(BigTangerine):
@@ -339,7 +340,7 @@ class MockService(BigTangerine):
 
 
 
-## POST 请求
+## POST请求
 
 ```python
 class MockService(BigTangerine):
@@ -396,7 +397,7 @@ class MockService(BigTangerine):
 
 
 
-## PUT 请求
+## PUT请求
 
 ```python
 class MockService(BigTangerine):
@@ -433,7 +434,7 @@ class MockService(BigTangerine):
     def put_method_path_variable(self, *, path_variable, resp=None, **kwargs): ...
 ```
 
-## DELETE 请求
+## DELETE请求
 
 ```python
 class MockService(BigTangerine):
@@ -498,7 +499,7 @@ if __name__== '__main__':
 
 ## MetaMysql
 
-### Factory 创建 Mysql Meta
+### Factory创建MysqlMeta
 
 ```python
 import os
@@ -573,7 +574,7 @@ class CMysql(BigTangerine):
 
 ## MetaJson
 
-### Factory 创建 Json Meta
+### Factory创建JsonMeta
 
 ```python
 # 定义 MetaJson 对象
@@ -624,9 +625,9 @@ class C01Employees(MetaJson):
 
 
 
-## Asserts 装饰器
+## Asserts装饰器
 
-### Meta 对象使用
+### Meta对象使用
 
 ```python
 class CompanyC01(MetaMysql):
@@ -652,7 +653,7 @@ class Employee(MetaMysql):
 
 ```
 
-### BigTangerine 使用
+### BigTangerine使用
 
 ```python
 class AssertMockService(BigTangerine):
