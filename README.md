@@ -135,7 +135,7 @@ class Company(MetaMysql):
 | ------------------------- | ------------------ | ------------------------------ | ------------------------------------------------------------ |
 | @cjen.http.post_mapping   | uri(required): str | 发送 Post 请求，并返回结果     | <ul><li>[下载文件](#POST请求)</li><li>[带参数url](#POST请求)</li><li>[请求体为JSON](#POST请求)</li></ul> |
 | @cjen.http.get_mapping    | uri(required): str | 发送 GET 请求，并返回结果      | [带参url](#GET请求)                                          |
-| @cjen.http.put_mapping    | uri(required): str | 发送 PUT 请求，并返回结果      | <ul><li>[带参URL](#PUT请求)</li><li>[请求体为JSON]((#PUT请求))</li></ul> |
+| @cjen.http.put_mapping    | uri(required): str | 发送 PUT 请求，并返回结果      | <ul><li>[带参URL](#PUT请求)</li><li>[请求体为JSON](#PUT请求)</li></ul> |
 | @cjen.http.delete_mapping | uri(required): str | 发送 delete 请求，并返回结果   | <ul><li>[带参URL](#DELETE请求)</li><li>[请求体为JSON](#DELETE请求)</li></ul> |
 | @cjen.http.upload_mapping | uri(required): str | 发送 上传文件 请求，并返回结果 | [上传文件](#上传文件)                                        |
 | @cjen.http.base_url       | uri(required): str | 设置访问的地址                 | [设置访问地址](#POST请求)                                    |
