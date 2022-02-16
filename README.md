@@ -119,13 +119,13 @@ class Company(MetaMysql):
 
 ### 4.3.1 Header 装饰器
 
-| 装饰器                           | 参数                    | 作用                                                     | 代码示例                                    |
-| -------------------------------- | ----------------------- | -------------------------------------------------------- |-----------------------------------------|
-| @cjen.headers.basicHeaders       | headers(required): dict | 初始化 Basic Header, Basic Header 是作为基准 Header 存在 | [定义基准Headers](#定义基准Headers)             |
-| @cjen.headers.appendBasicHeaders | headers(required): dict | 增加 Basic Header                                        | [增加基准Headers](#AppendBasicHeader)       |
-| @cjen.headers.addHeaders         | headers(required): dict | 新增临时 Header                                          | [添加临时Headers](#AddTempHeader)           |
-| @cjen.headers.contentType        | value(required): str    | 新增临时 Content-Type Header                             | [添加临时Content-Type](#AddTempContentType) |
-| @cjen.headers.accept             | value(required): str    | 新增临时 Accept Header                                   | [添加临时Accept](#AddTempAccept)            |
+| 装饰器                           | 参数                    | 作用                                                     | 代码示例                                      |
+| -------------------------------- | ----------------------- | -------------------------------------------------------- | --------------------------------------------- |
+| @cjen.headers.basicHeaders       | headers(required): dict | 初始化 Basic Header, Basic Header 是作为基准 Header 存在 | [定义基准Headers](#定义基准Headers)           |
+| @cjen.headers.appendBasicHeaders | headers(required): dict | 增加 Basic Header                                        | [增加基准Headers](#增加基准Headers)           |
+| @cjen.headers.addHeaders         | headers(required): dict | 新增临时 Header                                          | [添加临时Headers](#添加临时Headers)           |
+| @cjen.headers.contentType        | value(required): str    | 新增临时 Content-Type Header                             | [添加临时Content-Type](#添加临时Content-Type) |
+| @cjen.headers.accept             | value(required): str    | 新增临时 Accept Header                                   | [添加临时Accept](#添加临时Accept)             |
 
 
 
@@ -230,7 +230,7 @@ class HeaderMockService(BigTangerine):
 
 
 
-## <a id="AppendBasicHeader" style="color:black">增加基准Headers</a>
+## 增加基准Headers
 
 ```python
 class HeaderMockService(BigTangerine):
@@ -248,7 +248,7 @@ class HeaderMockService(BigTangerine):
 
 
 
-## <a id="AddTempHeader" style="color:black">添加临时Headers</a>
+## 添加临时Headers
 
 ```python
 class HeaderMockService(BigTangerine):
@@ -266,7 +266,7 @@ class HeaderMockService(BigTangerine):
         assert self.headers.get("Newheader") is None
 ```
 
-##　<a id="AddTempContentType" style="color:black">添加临时Content-Type</a>
+##　添加临时Content-Type
 
 ```python
 class HeaderMockService(BigTangerine):
@@ -286,7 +286,7 @@ class HeaderMockService(BigTangerine):
 
 
 
-## <a id="AddTempAccept" style="color:black">添加临时Accept</a>
+## 添加临时Accept
 
 ```python
 class HeaderMockService(BigTangerine):
