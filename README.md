@@ -133,12 +133,12 @@ class Company(MetaMysql):
 
 | 装饰器                    | 参数               | 作用                           | 代码示例                                                     |
 | ------------------------- | ------------------ | ------------------------------ | ------------------------------------------------------------ |
-| @cjen.http.post_mapping   | uri(required): str | 发送 Post 请求，并返回结果     | <ul><li><a href="#PostMapping">下载文件</a></li><li><a href="##POST 请求">带参数url</a></li><li><a href="##POST 请求">请求体为JSON</a></li></ul> |
-| @cjen.http.get_mapping    | uri(required): str | 发送 GET 请求，并返回结果      | <a href="##GET 请求">带参url</a>                             |
-| @cjen.http.put_mapping    | uri(required): str | 发送 PUT 请求，并返回结果      | <ul><li><a href="##PUT 请求">带参URL</a></li><li><a href="##PUT 请求">请求体为JSON</a></li></ul> |
-| @cjen.http.delete_mapping | uri(required): str | 发送 delete 请求，并返回结果   | <ul><li><a href="##DELETE 请求">带参URL</a></li><li><a href="##DELETE 请求">请求体为JSON</a></li></ul> |
-| @cjen.http.upload_mapping | uri(required): str | 发送 上传文件 请求，并返回结果 | [上传文件](##上传文件)                                       |
-| @cjen.http.base_url       | uri(required): str | 设置访问的地址                 | <a href="##POST 请求">设置访问地址</a>                       |
+| @cjen.http.post_mapping   | uri(required): str | 发送 Post 请求，并返回结果     | <ul><li>[下载文件](#POST请求)</li><li>[带参数url](#POST请求)</li><li>[请求体为JSON](#POST请求)</li></ul> |
+| @cjen.http.get_mapping    | uri(required): str | 发送 GET 请求，并返回结果      | [带参url](#GET请求)                                          |
+| @cjen.http.put_mapping    | uri(required): str | 发送 PUT 请求，并返回结果      | <ul><li>[带参URL](#PUT请求)</li><li>[请求体为JSON]((#PUT请求))</li></ul> |
+| @cjen.http.delete_mapping | uri(required): str | 发送 delete 请求，并返回结果   | <ul><li>[带参URL](#DELETE请求)</li><li>[请求体为JSON](#DELETE请求)</li></ul> |
+| @cjen.http.upload_mapping | uri(required): str | 发送 上传文件 请求，并返回结果 | [上传文件](#上传文件)                                        |
+| @cjen.http.base_url       | uri(required): str | 设置访问的地址                 | [设置访问地址](#POST请求)                                    |
 
 
 
