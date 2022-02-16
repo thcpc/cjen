@@ -155,7 +155,7 @@ class Company(MetaMysql):
 
 | 装饰器                                | 参数                                                         | 作用                               | 代码示例                                                     |
 | ------------------------------------- | ------------------------------------------------------------ | ---------------------------------- | ------------------------------------------------------------ |
-| @cjen.operate.asserts.validation_meta | <ul><li>meta_name(required): str</li><li>fields(optinal): str</li></ul> | 执行某一个Meta 对象的assert 装饰器 | <ul><li><a href="###BigTangerine 使用">执行指定属性的断言</a></li><li><a href="###BigTangerine 使用">所有的断言</a></li></ul> |
+| @cjen.operate.asserts.validation_meta | <ul><li>meta_name(required): str</li><li>fields(optinal): str</li></ul> | 执行某一个Meta 对象的assert 装饰器 | <ul><li>[执行指定属性的断言](#BigTangerine使用)</li><li>[所有的断言](#(#BigTangerine使用))</li></ul> |
 
 
 
@@ -169,29 +169,29 @@ class Company(MetaMysql):
 
 ###  4.2.1 (value)返回值装饰器 
 
-| 装饰器                     | 参数            | 作用                                                         | 代码示例                          |
-| -------------------------- | --------------- | ------------------------------------------------------------ | --------------------------------- |
-| @cjen.operate.common.value | 无参数          | 返回值                                                       |                                   |
-| @cjen.operate.json.listOf  | clazz(required) | 当返回值为多个时，生成对象 list，需配合 @cjen.operate.json.many 使用 | [转换为对象list](###值选择装饰器) |
+| 装饰器                     | 参数            | 作用                                                         | 代码示例                        |
+| -------------------------- | --------------- | ------------------------------------------------------------ | ------------------------------- |
+| @cjen.operate.common.value | 无参数          | 返回值                                                       |                                 |
+| @cjen.operate.json.listOf  | clazz(required) | 当返回值为多个时，生成对象 list，需配合 @cjen.operate.json.many 使用 | [转换为对象list](#值选择装饰器) |
 
 ### 4.2.2 值选择装饰器
 
-| 装饰器                  | 参数                                                         | 作用                         | 代码示例                      |
-| ----------------------- | ------------------------------------------------------------ | ---------------------------- | ----------------------------- |
-| @cjen.operate.json.one  | json_path(required): str                                     | 从json对象中某一个值         | [选取指定值](###值选择装饰器) |
-| @cjen.operate.json.many | <ul><li>json_path(required): str</li><li>filter_keys(optinal): list[str]</li></ul> | 从json对象中获取满足条件的值 | [提取多个值](###值选择装饰器) |
+| 装饰器                  | 参数                                                         | 作用                         | 代码示例                    |
+| ----------------------- | ------------------------------------------------------------ | ---------------------------- | --------------------------- |
+| @cjen.operate.json.one  | json_path(required): str                                     | 从json对象中某一个值         | [选取指定值](#值选择装饰器) |
+| @cjen.operate.json.many | <ul><li>json_path(required): str</li><li>filter_keys(optinal): list[str]</li></ul> | 从json对象中获取满足条件的值 | [提取多个值](#值选择装饰器) |
 
 
 
 ### 4.2.3  Asserts
 
-| 装饰器                             | 参数                        | 作用       | 代码示例                                  |
-| ---------------------------------- | --------------------------- | ---------- | ----------------------------------------- |
-| @cjen.operate.asserts.equal        | value(required): str or int | 等于       | <a href="##Asserts 装饰器">等于</a>       |
-| @cjen.operate.asserts.not_equal    | value(required): str or int | 不等于     | <a href="##Asserts 装饰器">不等于</a>     |
-| @cjen.operate.asserts.in_range     | value(required): list       | 在范围中   | <a href="##Asserts 装饰器">在范围内</a>   |
-| @cjen.operate.asserts.not_in_range | value(required): list       | 不在范围中 | <a href="##Asserts 装饰器">不在范围内</a> |
-| @cjen.operate.asserts.required     | 无参数                      | 必填       | <a href="##Asserts 装饰器">必填</a>       |
+| 装饰器                             | 参数                        | 作用       | 代码示例                    |
+| ---------------------------------- | --------------------------- | ---------- | --------------------------- |
+| @cjen.operate.asserts.equal        | value(required): str or int | 等于       | [等于](#Meta对象使用)       |
+| @cjen.operate.asserts.not_equal    | value(required): str or int | 不等于     | [不等于](#Meta对象使用)     |
+| @cjen.operate.asserts.in_range     | value(required): list       | 在范围中   | [在范围内](#Meta对象使用)   |
+| @cjen.operate.asserts.not_in_range | value(required): list       | 不在范围中 | [不在范围内](#Meta对象使用) |
+| @cjen.operate.asserts.required     | 无参数                      | 必填       | [必填](#Meta对象使用)       |
 
 
 
@@ -207,13 +207,13 @@ class Company(MetaMysql):
 
 ### 4.3.2 Asserts
 
-| 装饰器                             | 参数                        | 作用       | 代码示例                                  |
-| ---------------------------------- | --------------------------- | ---------- | ----------------------------------------- |
-| @cjen.operate.asserts.equal        | value(required): str or int | 等于       | <a href="##Asserts 装饰器">等于</a>       |
-| @cjen.operate.asserts.not_equal    | value(required): str or int | 不等于     | <a href="##Asserts 装饰器">不等于</a>     |
-| @cjen.operate.asserts.in_range     | value(required): list       | 在范围中   | <a href="##Asserts 装饰器">在范围内</a>   |
-| @cjen.operate.asserts.not_in_range | value(required): list       | 不在范围中 | <a href="##Asserts 装饰器">不在范围内</a> |
-| @cjen.operate.asserts.required     | 无参数                      | 必填       | <a href="##Asserts 装饰器">必填</a>       |
+| 装饰器                             | 参数                        | 作用       | 代码示例                    |
+| ---------------------------------- | --------------------------- | ---------- | --------------------------- |
+| @cjen.operate.asserts.equal        | value(required): str or int | 等于       | [等于](#Meta对象使用)       |
+| @cjen.operate.asserts.not_equal    | value(required): str or int | 不等于     | [不等于](#Meta对象使用)     |
+| @cjen.operate.asserts.in_range     | value(required): list       | 在范围中   | [在范围内](#Meta对象使用)   |
+| @cjen.operate.asserts.not_in_range | value(required): list       | 不在范围中 | [不在范围内](#Meta对象使用) |
+| @cjen.operate.asserts.required     | 无参数                      | 必填       | [必填](#Meta对象使用)       |
 
 ## 4.4 上下文装饰器
 
