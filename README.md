@@ -57,7 +57,6 @@ class 自定义类名(BigTangerine):
     def 方法名(self,*, meta对象名:Meta类型 resp=None, **kwargs): ...
 ```
 
-<p style="color: red">在方法定义中，如果使用了<a href="###4.3.2 Http 装饰器">Http装饰器</a>，则不要在方法中去return, 因为该架构目标设计是在方法中添加测试验证，而不是取值操作，值的传递可以使用 <a href="###3.1.3 上下文">上下文</a> 控制</p>
 
 ### 3.1.2 上下文
 

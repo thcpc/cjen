@@ -3,8 +3,8 @@ import threading
 import time
 from typing import IO
 
-import cjen
-from cjen.dada import SmileVoice
+from cjen.dada.smile import SmileVoice
+
 
 test_data = {"log1.log": list(range(1, 20)),
              "log2.log": list(range(21, 40)),

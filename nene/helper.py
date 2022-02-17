@@ -9,6 +9,19 @@ class FileHelper(object):
             return f.read()
 
     @classmethod
+<<<<<<< HEAD
+=======
+    def cur_read(cls, *, cur, file):
+        """
+        与期望文件文件同一路径文件
+        :param cur: 文件的__file__参数
+        :param file: 文件名
+        :return:
+        """
+        return cls.read(os.path.dirname(cur), file)
+
+    @classmethod
+>>>>>>> dev
     def replace(cls, rep: dict, *path):
         with open(os.path.join(*path), 'r') as f:
             return f.read().format(**rep)

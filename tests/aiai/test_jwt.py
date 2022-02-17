@@ -1,119 +1,65 @@
-import pytest
+import sys
 
-from cjen import BigOrange, JWTFrom, JWTAction
+from cjen import BigTangerine, JWTFrom, JWTAction
 import cjen
-from cjen.exceptions import JwtWrongErr
 
 
-class Obj3(object):
-
+class JWTMockService(BigTangerine):
+    @cjen.http.base_url(uri="http://127.0.0.1:5000")
     def __init__(self):
-        self.headers = dict(xxxx=9999)
+        super().__init__()
 
-    def json(self): return dict(yyyy=8888)
+    @cjen.http.post_mapping(uri="login")
+    @cjen.jwt(json_path="$.payload.jwtAuthenticationResponse.token", key="jwt", jwt_from=JWTFrom.BODY,
+              action=JWTAction.INIT)
+    def login(self, data, resp=None, **kwargs): ...
 
+    @cjen.http.get_mapping(uri="init_in_header")
+    @cjen.jwt(json_path="$.token", key="jwt", jwt_from=JWTFrom.HEADER, action=JWTAction.INIT)
+    def init_in_header(self, resp=None, **kwargs): ...
 
-class Obj2(object):
+    @cjen.http.get_mapping(uri="init_in_body")
+    @cjen.jwt(json_path="$.payload.jwtAuthenticationResponse.token", key="jwt", jwt_from=JWTFrom.BODY,
+              action=JWTAction.INIT)
+    def init_in_body(self, resp=None, **kwargs): ...
 
-    def __init__(self):
-        self.headers = dict(auth=9999)
+    @cjen.http.get_mapping(uri="exchange_in_header")
+    @cjen.jwt(json_path="$.token", key="jwt", jwt_from=JWTFrom.HEADER,
+              action=JWTAction.EXCHANGE)
+    def exchange_in_header(self, resp=None, **kwargs): ...
 
-    def json(self): return dict(auth=8888)
+    @cjen.http.get_mapping(uri="exchange_in_body")
+    @cjen.jwt(json_path="$.payload.jwtAuthenticationResponse.token", key="jwt", jwt_from=JWTFrom.BODY,
+              action=JWTAction.EXCHANGE)
+    def exchange_in_body(self, resp=None, **kwargs): ...
 
+    @cjen.http.get_mapping(uri="refresh_in_header")
+    @cjen.jwt(json_path="$.token", key="jwt", jwt_from=JWTFrom.HEADER,
+              action=JWTAction.REFRESH)
+    def refresh_in_header(self, resp=None, **kwargs): ...
 
-class Obj1(object):
-
-    def __init__(self):
-        self.headers = dict(auth=234)
-
-    def json(self): return dict(auth=123)
-
-
-class TestObj(BigOrange):
-
-    @cjen.headers.basicHeaders(headers={"AUTH": ""})
-    def __init__(self): super().__init__()
-
-    @cjen.jwt(key="AUTH", json_path="$.auth", jwt_from=JWTFrom.BODY, action=JWTAction.INIT)
-    def post1(self):
-        return Obj1()
-
-    @cjen.jwt(key="AUTH", json_path="$.auth", jwt_from=JWTFrom.HEADER, action=JWTAction.INIT)
-    def post2(self):
-        return Obj1()
-
-
-class TestObj2(BigOrange):
-    def __init__(self): super().__init__()
-
-    @cjen.jwt(key="AUTH", json_path="$.auth", jwt_from=JWTFrom.BODY, action=JWTAction.INIT)
-    def post1(self):
-        return Obj2()
-
-    @cjen.jwt(key="AUTH", json_path="$.auth", jwt_from=JWTFrom.HEADER, action=JWTAction.INIT)
-    def post2(self):
-        return Obj2()
+    @cjen.http.get_mapping(uri="refresh_in_body")
+    @cjen.jwt(json_path="$.payload.jwtAuthenticationResponse.token", key="jwt", jwt_from=JWTFrom.BODY,
+              action=JWTAction.REFRESH)
+    def refresh_in_body(self, resp=None, **kwargs): ...
 
 
-class TestObj3(BigOrange):
-    def __init__(self): super().__init__()
-
-    @cjen.jwt(key="AUTH", json_path="$.auth", jwt_from=JWTFrom.BODY, action=JWTAction.INIT)
-    def post1(self):
-        return Obj3()
-
-    @cjen.jwt(key="AUTH", json_path="$.auth", jwt_from=JWTFrom.HEADER, action=JWTAction.INIT)
-    def post2(self):
-        return Obj3()
+def test_init_body_exchange_body_refresh_body():
+    mock = JWTMockService()
+    mock.init_in_body()
+    assert mock.headers["jwt"] == "Jwt Init Token In Body"
+    mock.exchange_in_body()
+    assert mock.headers["jwt"] == "Jwt Exchange Token In Body"
+    mock.refresh_in_body()
+    assert mock.headers["jwt"] == "Jwt Refresh Token In Body"
 
 
-class TestObj4(BigOrange):
-    def __init__(self): super().__init__()
-
-    @cjen.jwt(key="AUTH", json_path="$.auth", jwt_from=JWTFrom.BODY, action=JWTAction.INIT)
-    @cjen.headers.accept(value="JJJJJ")
-    def post1(self, *args, **kwargs):
-        assert kwargs["headers"]["Accept"] == "JJJJJ"
-        return Obj1()
-
-    @cjen.headers.contentType(value="LLLL")
-    @cjen.jwt(key="AUTH", json_path="$.auth", jwt_from=JWTFrom.HEADER, action=JWTAction.INIT)
-    def post2(self, *args, **kwargs):
-        assert kwargs["headers"]["Content-Type"] == "LLLL"
-        return Obj1()
-
-
-def test_jwt_ok():
-    t1 = TestObj()
-    t1.post1()
-    assert t1.headers["AUTH"] == 123
-    t1.post2()
-    assert t1.headers["AUTH"] == 234
-
-    t2 = TestObj2()
-    t2.post1()
-    assert t2.headers["AUTH"] == 8888
-    t2.post2()
-    assert t2.headers["AUTH"] == 9999
-
-    t4 = TestObj4()
-    t4.post1()
-    assert t4.headers["AUTH"] == 123
-    t4.post2()
-    assert t4.headers["AUTH"] == 234
-
-
-@pytest.mark.xfail(raises=JwtWrongErr)
-def test_jwt_fail_header():
-    t = TestObj3()
-    t.post2()
-
-
-@pytest.mark.xfail(raises=JwtWrongErr)
-def test_jwt_fail_body():
-    t = TestObj3()
-    t.post1()
-
-
-if __name__ == '__main__':
-    pytest.main(["test_jwt_ok.py", "test_jwt_fail_header.py", "test_jwt_fail_body.py"])
+def test_init_header_exchange_header_refresh_header():
+    mock = JWTMockService()
+    mock.init_in_header()
+    assert mock.headers["jwt"] == "Jwt Init Token In Header"
+    mock.exchange_in_header()
+    assert mock.headers["jwt"] == "Jwt Exchange Token In Header"
+    mock.refresh_in_header()
+    assert mock.headers["jwt"] == "Jwt Refresh Token In Header"
+>>>>>>> dev
