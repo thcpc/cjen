@@ -62,4 +62,4 @@ def test_init_header_exchange_header_refresh_header():
     assert mock.headers["jwt"] == "Jwt Exchange Token In Header"
     mock.refresh_in_header()
     assert mock.headers["jwt"] == "Jwt Refresh Token In Header"
->>>>>>> dev
+
