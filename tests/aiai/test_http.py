@@ -1,5 +1,4 @@
 import os.path
-
 import cjen
 from cjen import BigTangerine
 
@@ -104,5 +103,5 @@ def test_put():
 def test_delete():
     mock = MockService()
     mock.delete_method_json(data=dict(username="xx", pwd="yyy"))
-    # mock.delete_method_variable(path_variable=dict(id=1))
-    # mock.delete_method_path_variable(path_variable=dict(id=1))
+    mock.delete_method_variable(path_variable=dict(id=1))
+    mock.delete_method_path_variable(path_variable=dict(id=1))
