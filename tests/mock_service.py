@@ -160,7 +160,7 @@ def headers_tester():
     return rsp
 
 
-@mock_app.route("/company/<int:company_id>", methods=["GET"])
+@mock_app.route("/company/<int:company_id>", methods=["GET", "POST", "PUT", "DELETE"])
 def company(company_id):
     rsp = base_json_response()
     ret = list(filter(lambda c: c.get("id") == company_id, __mock_data["companies"]))[0]

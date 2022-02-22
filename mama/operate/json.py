@@ -25,7 +25,6 @@ def factory(*, clazz):
         @_check_params_factory(clazz=MetaJson)
         @_check_instance(decorator="operate.json.factory", expect=BigTangerine)
         def __inner__(ins: BigTangerine, *args, **kwargs):
-
             for key, value in kwargs.get("method.__annotations__").items():
                 if issubclass(value, MetaJson):
                     kwargs[key] = MetaData.factory(clazz=clazz, data=kwargs.get("resp"))
@@ -35,6 +34,10 @@ def factory(*, clazz):
                         kwargs[key].context.update(ins.context)
             return func(ins, *args, **kwargs)
 
+        def __empty__(ins: BigTangerine, *args, **kwargs):
+            return func(ins, *args, **kwargs)
+
+        if clazz is None: return __empty__
         return __inner__
 
     return __wrapper__

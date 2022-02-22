@@ -4,13 +4,13 @@ from typing import IO
 from pymysql.cursors import Cursor
 
 import cjen
-from cjen import BigTangerine, MetaMysql
+# from cjen import BigTangerine, MetaMysql
 
 # TODO 时区转换的装饰器
-from cjen.bigtangerine import ContextArgs
+from cjen.bigtangerine import ContextArgs, BigTangerine
 from cjen.commons import _get_method_params
 from cjen.exceptions import _check_instance, _check_params_factory
-from cjen.mama.meta_data import MetaData
+from cjen.mama.meta_data import MetaData, MetaMysql
 from cjen.mama.operate.common import value
 
 

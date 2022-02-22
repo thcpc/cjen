@@ -1,3 +1,5 @@
+import os
+
 import cjen
 from cjen import MetaJson, BigTangerine
 
@@ -68,6 +70,36 @@ class JsonMockService(BigTangerine):
             assert company.id() == int(f"{i + 1}")
             assert company.name() == f"C0{i + 1}"
 
+    @cjen.http.get_mapping(uri="company/{company_id}", json_clazz=Company)
+    def get_json(self, *, path_variable: dict, resp=None, company: Company = None, **kwargs):
+        assert company.id() == path_variable.get("company_id")
+        assert company.name() == "C02"
+        assert company.procCode() == 200
+
+    @cjen.http.put_mapping(uri="company/{company_id}", json_clazz=Company)
+    def put_json(self, *, path_variable: dict, resp=None, company: Company = None, **kwargs):
+        assert company.id() == path_variable.get("company_id")
+        assert company.name() == "C02"
+        assert company.procCode() == 200
+
+    @cjen.http.post_mapping(uri="company/{company_id}", json_clazz=Company)
+    def post_json(self, *, path_variable: dict, resp=None, company: Company = None, **kwargs):
+        assert company.id() == path_variable.get("company_id")
+        assert company.name() == "C02"
+        assert company.procCode() == 200
+
+    @cjen.http.delete_mapping(uri="company/{company_id}", json_clazz=Company)
+    def delete_json(self, *, path_variable: dict, resp=None, company: Company = None, **kwargs):
+        assert company.id() == path_variable.get("company_id")
+        assert company.name() == "C02"
+        assert company.procCode() == 200
+
+    @cjen.http.upload_mapping(uri="company/{company_id}", json_clazz=Company)
+    def upload_json(self, *, path_variable: dict, data, resp=None, company: Company = None, **kwargs):
+        assert company.id() == path_variable.get("company_id")
+        assert company.name() == "C02"
+        assert company.procCode() == 200
+
 
 def test_one():
     mock = JsonMockService()
@@ -82,3 +114,13 @@ def test_many():
 def test_listOf():
     mock = JsonMockService()
     mock.all_company()
+
+
+def test_http_json():
+    mock = JsonMockService()
+    mock.get_json(path_variable=dict(company_id=2))
+    mock.post_json(path_variable=dict(company_id=2))
+    mock.delete_json(path_variable=dict(company_id=2))
+    mock.put_json(path_variable=dict(company_id=2))
+    mock.upload_json(path_variable=dict(company_id=2),
+                     data=dict(file=os.path.join(os.path.dirname(os.path.dirname(__file__)), "download_file.txt")))

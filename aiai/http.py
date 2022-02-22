@@ -5,6 +5,7 @@ import requests
 import yaml
 from requests_toolbelt import MultipartEncoder
 
+from cjen.mama.operate.json import factory
 from cjen.bigtangerine import BigTangerine
 from cjen.commons import _get_method_params
 from cjen.exceptions import _check_uri, NetWorkErr, _check_instance
@@ -184,7 +185,7 @@ def _put(func):
     return __inner__
 
 
-def get_mapping(*, uri: str):
+def get_mapping(*, uri: str, json_clazz=None):
     """
     使用范围：BigTangerine 或其 子类对象
 
@@ -192,6 +193,7 @@ def get_mapping(*, uri: str):
 
     发送 GET 请求，并返回结果
 
+    :param json_clazz: 如果期望返回数据直接生成MetaJson, 则指定该生成的类型
     :param uri:
     :return:
     """
@@ -203,6 +205,7 @@ def get_mapping(*, uri: str):
         @_url(uri=uri)
         @_get
         @_response
+        @factory(clazz=json_clazz)
         def __inner__(ins: BigTangerine, *args, **kwargs):
             func(ins, *args, **kwargs)
             return kwargs.get("resp")
@@ -212,7 +215,7 @@ def get_mapping(*, uri: str):
     return __wrapper__
 
 
-def post_mapping(*, uri: str):
+def post_mapping(*, uri: str, json_clazz=None):
     """
     使用范围：BigTangerine 或其 子类对象
 
@@ -220,6 +223,7 @@ def post_mapping(*, uri: str):
 
     发送 Post 请求，并返回结果
 
+    :param json_clazz:
     :param uri:
     :return:
     """
@@ -231,6 +235,7 @@ def post_mapping(*, uri: str):
         @_url(uri=uri)
         @_post
         @_response
+        @factory(clazz=json_clazz)
         def __inner__(ins: BigTangerine, *args, **kwargs):
             func(ins, *args, **kwargs)
             return kwargs.get("resp")
@@ -240,7 +245,7 @@ def post_mapping(*, uri: str):
     return __wrapper__
 
 
-def put_mapping(*, uri: str):
+def put_mapping(*, uri: str, json_clazz=None):
     """
     使用范围：BigTangerine 或其 子类对象
 
@@ -248,6 +253,7 @@ def put_mapping(*, uri: str):
 
     发送 PUT 请求，并返回结果
 
+    :param json_clazz:
     :param uri:
     :return:
     """
@@ -259,6 +265,7 @@ def put_mapping(*, uri: str):
         @_url(uri=uri)
         @_put
         @_response
+        @factory(clazz=json_clazz)
         def __inner__(ins: BigTangerine, *args, **kwargs):
             func(ins, *args, **kwargs)
             return kwargs.get("resp")
@@ -268,7 +275,7 @@ def put_mapping(*, uri: str):
     return __wrapper__
 
 
-def upload_mapping(*, uri: str):
+def upload_mapping(*, uri: str, json_clazz=None):
     """
     使用范围：BigTangerine 或其 子类对象
 
@@ -276,6 +283,7 @@ def upload_mapping(*, uri: str):
 
     发送 上传文件 请求，并返回结果
 
+    :param json_clazz:
     :param uri:
     :return:
     """
@@ -288,6 +296,7 @@ def upload_mapping(*, uri: str):
         @_multipart_form
         @_post
         @_response
+        @factory(clazz=json_clazz)
         def __inner__(ins: BigTangerine, *args, **kwargs):
             func(ins, *args, **kwargs)
             return kwargs.get("resp")
@@ -297,7 +306,7 @@ def upload_mapping(*, uri: str):
     return __wrapper__
 
 
-def delete_mapping(*, uri: str):
+def delete_mapping(*, uri: str, json_clazz=None):
     """
     使用范围：BigTangerine 或其 子类对象
 
@@ -305,6 +314,7 @@ def delete_mapping(*, uri: str):
 
     发送 delete 请求，并返回结果
 
+    :param json_clazz:
     :param uri:
     :return:
     """
@@ -316,6 +326,7 @@ def delete_mapping(*, uri: str):
         @_url(uri=uri)
         @_delete
         @_response
+        @factory(clazz=json_clazz)
         def __inner__(ins: BigTangerine, *args, **kwargs):
             func(ins, *args, **kwargs)
             return kwargs.get("resp")
