@@ -5,6 +5,7 @@ import requests
 import yaml
 from requests_toolbelt import MultipartEncoder
 
+from cjen.mama.operate.json import factory
 from cjen.bigtangerine import BigTangerine
 from cjen.commons import _get_method_params
 from cjen.exceptions import _check_uri, NetWorkErr, _check_instance
@@ -53,11 +54,9 @@ def _response(func):
         if kwargs.get("resp").status_code == 200:
             if "application/json" in kwargs.get("resp").headers.get("Content-Type"):
                 kwargs["response_content"] = kwargs.get("resp")
-<<<<<<< HEAD
-                kwargs["resp"] = kwargs.get("resp").json()
-=======
+
                 kwargs["resp"] = kwargs.get("resp").json() if kwargs.get("resp").content else None
->>>>>>> dev
+
                 return func(ins, *args, **kwargs)
             kwargs["resp"] = kwargs.get("resp").content
             return func(ins, *args, **kwargs)
@@ -93,29 +92,24 @@ def base_url(*, uri: str):
 
 
 def _delete(func):
-<<<<<<< HEAD
-    def __inner__(ins: BigTangerine, *args, **kwargs):
-        headers = {**ins.headers, **kwargs.get("headers")} if kwargs.get("headers") else ins.headers
-        kwargs["resp"] = requests.delete(url=kwargs["url"], headers=headers,
-                                         data=kwargs.get("data"))
-=======
+
     @_http_headers
     @_http_json(method=requests.delete)
     @_http_default(method=requests.delete)
     def __inner__(ins: BigTangerine, *args, **kwargs):
->>>>>>> dev
+
         return func(ins, *args, **kwargs)
 
     return __inner__
 
 
-<<<<<<< HEAD
+
 def _get(func):
     def __inner__(ins: BigTangerine, *args, **kwargs):
         headers = {**ins.headers, **kwargs.get("headers")} if kwargs.get("headers") else ins.headers
         kwargs["resp"] = requests.get(url=kwargs["url"], headers=headers,
                                       params=kwargs.get("params"))
-=======
+
 def _http_headers(func):
     def __inner__(ins: BigTangerine, *args, **kwargs):
         kwargs["headers"] = {**ins.headers, **kwargs.get("headers")} if kwargs.get("headers") else ins.headers
@@ -176,56 +170,40 @@ def _get(func):
     def __inner__(ins: BigTangerine, *args, **kwargs):
         headers = {**ins.headers, **kwargs.get("headers")} if kwargs.get("headers") else ins.headers
         kwargs["resp"] = requests.get(url=kwargs["url"], headers=headers, params=kwargs.get("params"))
->>>>>>> dev
+
         return func(ins, *args, **kwargs)
 
     return __inner__
 
 
 def _post(func):
-<<<<<<< HEAD
-    def __inner__(ins: BigTangerine, *args, **kwargs):
-        headers = {**ins.headers, **kwargs.get("headers")} if kwargs.get("headers") else ins.headers
-        if headers.get("Content-Type") and "json" in headers.get("Content-Type"):
-            kwargs["resp"] = requests.post(url=kwargs["url"], headers=headers, json=kwargs.get("data"))
-        elif headers.get("Content-Type") and "multipart/form-data" in headers.get("Content-Type"):
-            kwargs["resp"] = requests.post(url=kwargs["url"], headers=headers, data=kwargs.get("form_data"))
-        else:
-            kwargs["resp"] = requests.post(url=kwargs["url"], headers=headers, data=kwargs.get("data"))
-=======
+
     @_http_headers
     @_http_json(method=requests.post)
     @_http_file(method=requests.post)
     @_http_default(method=requests.post)
     def __inner__(ins: BigTangerine, *args, **kwargs):
->>>>>>> dev
+
         return func(ins, *args, **kwargs)
 
     return __inner__
 
 
 def _put(func):
-<<<<<<< HEAD
-    def __inner__(ins: BigTangerine, *args, **kwargs):
-        headers = {**ins.headers, **kwargs.get("headers")} if kwargs.get("headers") else ins.headers
-        if headers.get("Content-Type") and "json" in headers.get("Content-Type"):
-            kwargs["resp"] = requests.put(url=kwargs["url"], headers=headers, json=kwargs.get("data"))
-        else:
-            kwargs["resp"] = requests.put(url=kwargs["url"], headers=headers, data=kwargs.get("data"))
-=======
+
     @_http_headers
     @_http_json(method=requests.put)
     @_http_default(method=requests.put)
     def __inner__(ins: BigTangerine, *args, **kwargs):
->>>>>>> dev
+
         return func(ins, *args, **kwargs)
 
     return __inner__
 
 
-def get_mapping(*, uri: str):
-<<<<<<< HEAD
-=======
+
+def get_mapping(*, uri: str, json_clazz=None):
+
     """
     使用范围：BigTangerine 或其 子类对象
 
@@ -233,11 +211,11 @@ def get_mapping(*, uri: str):
 
     发送 GET 请求，并返回结果
 
+    :param json_clazz: 如果期望返回数据直接生成MetaJson, 则指定该生成的类型
     :param uri:
     :return:
     """
 
->>>>>>> dev
     def __wrapper__(func):
         @_get_method_params(method=func)
         @_check_instance(decorator="http.get_mapping", expect=BigTangerine)
@@ -245,6 +223,7 @@ def get_mapping(*, uri: str):
         @_url(uri=uri)
         @_get
         @_response
+        @factory(clazz=json_clazz)
         def __inner__(ins: BigTangerine, *args, **kwargs):
             func(ins, *args, **kwargs)
             return kwargs.get("resp")
@@ -254,19 +233,16 @@ def get_mapping(*, uri: str):
     return __wrapper__
 
 
-def post_mapping(*, uri: str):
+def post_mapping(*, uri: str, json_clazz=None):
     """
     使用范围：BigTangerine 或其 子类对象
-<<<<<<< HEAD
-    位置：装饰函数的顶层装饰器
-    发送 Post 请求，并返回结果
-=======
 
     位置：装饰函数的上层装饰器，如果有使用Header装饰器，在Header装饰器之后，如果没有 则是顶层装饰器
 
     发送 Post 请求，并返回结果
 
->>>>>>> dev
+    :param json_clazz:
+
     :param uri:
     :return:
     """
@@ -278,6 +254,7 @@ def post_mapping(*, uri: str):
         @_url(uri=uri)
         @_post
         @_response
+        @factory(clazz=json_clazz)
         def __inner__(ins: BigTangerine, *args, **kwargs):
             func(ins, *args, **kwargs)
             return kwargs.get("resp")
@@ -287,19 +264,16 @@ def post_mapping(*, uri: str):
     return __wrapper__
 
 
-def put_mapping(*, uri: str):
+def put_mapping(*, uri: str, json_clazz=None):
     """
     使用范围：BigTangerine 或其 子类对象
-<<<<<<< HEAD
-    位置：装饰函数的顶层装饰器
-    发送 PUT 请求，并返回结果
-=======
 
     位置：装饰函数的上层装饰器，如果有使用Header装饰器，在Header装饰器之后，如果没有 则是顶层装饰器
 
     发送 PUT 请求，并返回结果
 
->>>>>>> dev
+    :param json_clazz:
+
     :param uri:
     :return:
     """
@@ -311,6 +285,7 @@ def put_mapping(*, uri: str):
         @_url(uri=uri)
         @_put
         @_response
+        @factory(clazz=json_clazz)
         def __inner__(ins: BigTangerine, *args, **kwargs):
             func(ins, *args, **kwargs)
             return kwargs.get("resp")
@@ -320,19 +295,15 @@ def put_mapping(*, uri: str):
     return __wrapper__
 
 
-def upload_mapping(*, uri: str):
+def upload_mapping(*, uri: str, json_clazz=None):
     """
     使用范围：BigTangerine 或其 子类对象
-<<<<<<< HEAD
-    位置：装饰函数的顶层装饰器
-    发送 上传文件 请求，并返回结果
-=======
 
     位置：装饰函数的上层装饰器，如果有使用Header装饰器，在Header装饰器之后，如果没有 则是顶层装饰器
 
     发送 上传文件 请求，并返回结果
 
->>>>>>> dev
+    :param json_clazz:
     :param uri:
     :return:
     """
@@ -345,6 +316,7 @@ def upload_mapping(*, uri: str):
         @_multipart_form
         @_post
         @_response
+        @factory(clazz=json_clazz)
         def __inner__(ins: BigTangerine, *args, **kwargs):
             func(ins, *args, **kwargs)
             return kwargs.get("resp")
@@ -354,19 +326,15 @@ def upload_mapping(*, uri: str):
     return __wrapper__
 
 
-def delete_mapping(*, uri: str):
+def delete_mapping(*, uri: str, json_clazz=None):
     """
     使用范围：BigTangerine 或其 子类对象
-<<<<<<< HEAD
-    位置：装饰函数的顶层装饰器
-    发送 delete 请求，并返回结果
-=======
 
     位置：位置：装饰函数的上层装饰器，如果有使用Header装饰器，在Header装饰器之后，如果没有 则是顶层装饰器
 
     发送 delete 请求，并返回结果
 
->>>>>>> dev
+    :param json_clazz:
     :param uri:
     :return:
     """
@@ -378,6 +346,7 @@ def delete_mapping(*, uri: str):
         @_url(uri=uri)
         @_delete
         @_response
+        @factory(clazz=json_clazz)
         def __inner__(ins: BigTangerine, *args, **kwargs):
             func(ins, *args, **kwargs)
             return kwargs.get("resp")

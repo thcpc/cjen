@@ -1,43 +1,31 @@
 import time
-<<<<<<< HEAD
 
-from pymysql.cursors import Cursor
-
-from cjen import BigTangerine, MetaMysql
-
-# TODO 时区转换的装饰器
-=======
 from typing import IO
 
 from pymysql.cursors import Cursor
 
 import cjen
-from cjen import BigTangerine, MetaMysql
+# from cjen import BigTangerine, MetaMysql
 
 # TODO 时区转换的装饰器
-from cjen.bigtangerine import ContextArgs
->>>>>>> dev
+
+from cjen.bigtangerine import ContextArgs, BigTangerine
+
 from cjen.commons import _get_method_params
 from cjen.exceptions import _check_instance, _check_params_factory
-from cjen.mama.meta_data import MetaData
+from cjen.mama.meta_data import MetaData, MetaMysql
 from cjen.mama.operate.common import value
-<<<<<<< HEAD
-from cjen.nene.database_pool import DatabasePool
-=======
+# from cjen.nene.database_pool import DatabasePool
 
 
 @cjen.haha(LogPath="", LogName="CJEN.log")
 def track_sql(msg: dict, io: IO):
     io.write("{sql}\n".format(**msg))
->>>>>>> dev
 
 
 def type_boolean(*, true, false):
     """
-<<<<<<< HEAD
-=======
     TODO 待测试
->>>>>>> dev
     covert to True or False
     :param true:
     :param false:
@@ -62,21 +50,6 @@ def timezone(*, zone: str): pass
 def type_str_datetime(*, fmt: str): pass
 
 
-<<<<<<< HEAD
-def factory(*, cursor: Cursor, clazz, sql: str, params=None, size=1):
-    """
-    TODO 需要测试数据库异常的时候，配合其它装饰器有何影响
-    使用条件: 作用在 类型 BigTangerine 或 其子类的 对象
-    位置：放在http.post_mapping 等请求装饰器之后
-    作用：创建针对MYSQL 的 MetaData
-    1. 支持返回一个对象 或 对象列表
-    :param cursor:
-    :param size: -1 all,
-    :param params:
-    :param sql:
-    :param clazz:
-    :return:
-=======
 def factory(*, cursor: Cursor, clazz, sql: str, params=None, size=1, track=False):
     """
     使用条件: 作用在 类型 BigTangerine 或 其子类的 对象 \n
@@ -91,7 +64,6 @@ def factory(*, cursor: Cursor, clazz, sql: str, params=None, size=1, track=False
     :param sql: 查询的 sql
     :param clazz:
     :return: 支持返回一个对象 或 对象列表
->>>>>>> dev
     """
 
     def __wrapper__(func):
@@ -101,13 +73,9 @@ def factory(*, cursor: Cursor, clazz, sql: str, params=None, size=1, track=False
         def __inner__(ins, *args, **kwargs):
 
             try:
-<<<<<<< HEAD
-                cursor.execute(sql, args=params)
-=======
                 query_args = ins.context.pick_up(context_args=params) if isinstance(params, ContextArgs) else params
                 cursor.execute(sql, args=query_args)
                 if track: track_sql(dict(sql=cursor.mogrify(sql, args=query_args)))
->>>>>>> dev
                 values = cursor.fetchall()
                 cols = [col[0] for col in cursor.description]
                 data = [dict(zip(cols, ele)) for ele in values]
@@ -171,36 +139,3 @@ def type_datetime_stamp(func):
 class TestObj(MetaMysql):
     @value
     def id(self): ...
-
-<<<<<<< HEAD
-
-=======
->>>>>>> dev
-# cusor = DatabasePool.cursor(host="200.200.101.113", user="root", port=3306, pwd="Admin123",
-#                             database="eclinical_design_dev_56")
-
-
-# class Api(BigTangerine):
-#
-#     def __init__(self):
-#         super().__init__()
-#
-#     @factory(cursor=cusor, clazz=TestObj, sql="SELECT * FROM eclinical_odm_item WHERE id = 1", size=-1)
-#     def xx(self, metas: list[TestObj] = None, **kwargs):
-#         for meta in metas:
-#             print(meta.id())
-#
-#     @factory(cursor=cusor, clazz=TestObj,
-#              sql="""SELECT * FROM eclinical_odm_item WHERE id = %s and crf_version_id =5 and is_delete = 0""",
-#              params=(1,))
-#     def yy(self, meta: TestObj = None, **kwargs):
-#         print(meta.id())
-#
-#
-# if __name__ == '__main__':
-#     Api().yy()
-<<<<<<< HEAD
-    # Api().xx()
-=======
-# Api().xx()
->>>>>>> dev

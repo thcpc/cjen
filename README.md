@@ -671,3 +671,14 @@ class AssertMockService(BigTangerine):
     def validation_appoint(self, resp=None, company: CompanyC01 = None, resp_null: ResponseNone = None, **kwargs): ...
 ```
 
+
+
+# Release Note
+
+## 1.0.0
+
+初始化框架
+
+## 1.0.1
+
+- get_mapping,  put_mapping,  delete_mapping, upload_mapping, post_mapping  新增json_clazz参数，非必填，作用相当于operate.json.factory  
