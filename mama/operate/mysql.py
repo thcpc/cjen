@@ -46,7 +46,7 @@ def timezone(*, zone: str): pass
 def type_str_datetime(*, fmt: str): pass
 
 
-def factory(*, cursor: Cursor, clazz, sql: str, params=None, size=1, track=False):
+def factory(*, cursor: Cursor = None, clazz, sql: str, params=None, size=1, track=False):
     """
     使用条件: 作用在 类型 BigTangerine 或 其子类的 对象 \n
     位置：放在http.post_mapping 等请求装饰器之后 \n
@@ -69,14 +69,15 @@ def factory(*, cursor: Cursor, clazz, sql: str, params=None, size=1, track=False
         def __inner__(ins, *args, **kwargs):
 
             try:
+                mysql_cursor = cursor if cursor else ins.context.get("cursor")
                 query_args = ins.context.pick_up(context_args=params) if isinstance(params, ContextArgs) else params
-                cursor.execute(sql, args=query_args)
-                if track: track_sql(dict(sql=cursor.mogrify(sql, args=query_args)))
-                values = cursor.fetchall()
-                cols = [col[0] for col in cursor.description]
+                mysql_cursor.execute(sql, args=query_args)
+                if track: track_sql(dict(sql=mysql_cursor.mogrify(sql, args=query_args)))
+                values = mysql_cursor.fetchall()
+                cols = [col[0] for col in mysql_cursor.description]
                 data = [dict(zip(cols, ele)) for ele in values]
                 if size != -1:
-                    assert cursor.rowcount == size, f"the record number is not eql {size}"
+                    assert mysql_cursor.rowcount == size, f"the record number is not eql {size}"
                 for key, val in kwargs.get("method.__annotations__").items():
                     if issubclass(val, clazz) or (
                             "__origin__" in dir(val) and val.__origin__ == list and issubclass(val.__args__[0], clazz)):
@@ -91,7 +92,7 @@ def factory(*, cursor: Cursor, clazz, sql: str, params=None, size=1, track=False
             except Exception as e:
                 raise e
             finally:
-                cursor.close()
+                mysql_cursor.close()
 
         return __inner__
 
