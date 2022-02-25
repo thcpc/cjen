@@ -91,8 +91,9 @@ def factory(*, cursor: Cursor = None, clazz, sql: str, params=None, size=1, trac
                 return func(ins, *args, **kwargs)
             except Exception as e:
                 raise e
-            finally:
-                mysql_cursor.close()
+            finally: pass
+                # TODO 可能会造成连接池用完
+                # mysql_cursor.close()
 
         return __inner__
 
