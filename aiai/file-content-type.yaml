@@ -300,6 +300,7 @@ ContentType:
   .tld: text/xml
   .torrent: application/x-bittorrent
   .txt: text/plain
+  .sql: text/plain
   .uls: text/iuls
   .vda: application/x-vda
   .vml: text/xml

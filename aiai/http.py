@@ -17,7 +17,7 @@ def _multipart_form(func):
         files = {}
         others = {}
         for k, v in data_form.items():
-            if os.path.exists(v):
+            if os.path.exists(v) and os.path.isfile(v):
                 files[k] = v
             else:
                 others[k] = v

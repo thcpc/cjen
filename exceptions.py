@@ -1,4 +1,5 @@
 import re
+import warnings
 
 
 class MethodWrongErr(Exception): ...
@@ -19,7 +20,7 @@ class NetWorkErr(Exception): ...
 class JsonPathNotFoundErr(Exception): ...
 
 
-class FactoryParamsErr(Exception): ...
+class FactoryParamsWarning(UserWarning): ...
 
 
 class NoMetaErr(Exception): ...
@@ -86,7 +87,7 @@ def _check_params_factory(*, clazz):
                 count += len(list(
                     filter(lambda param: param.__origin__ == list and issubclass(param.__args__[0], clazz), params)))
             # 只能包含其中的任一一个
-            if count != 1: raise FactoryParamsErr(f"{clazz} params number should = 1, Now {count}")
+            if count != 1: warnings.warn(f"{clazz} params number should = 1, Now {count}", FactoryParamsWarning)
             return func(ins, *args, **kwargs)
 
         return __inner__

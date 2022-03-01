@@ -1,4 +1,6 @@
 import os.path
+
+import allure
 import cjen
 from cjen import BigTangerine
 
@@ -10,7 +12,9 @@ class MockService(BigTangerine):
     @cjen.headers.contentType(value="application/json")
     @cjen.http.post_mapping(uri="post_method_json")
     def post_method_json(self, *, data, resp=None, **kwargs):
-        assert resp.get("procCode") == 200
+        with allure.step("tttt"):
+            print(resp)
+            assert resp.get("procCode") == 100
 
     @cjen.http.post_mapping(uri="post_method_variable/{id}")
     def post_method_variable(self, *, path_variable: dict, resp=None, **kwargs):
@@ -70,11 +74,15 @@ class MockService(BigTangerine):
         os.remove(path)
 
 
+@allure.feature("测试POST请求")
 def test_post():
     mock = MockService()
-    mock.post_method_json(data=dict(username="xx", pwd="yyy"))
-    mock.post_method_variable(path_variable=dict(id=1))
-    mock.post_method_path_variable(path_variable=dict(id=1))
+    with allure.step("测试Post请求: 参数为Json"):
+        mock.post_method_json(data=dict(username="xx", pwd="yyy"))
+    with allure.step("测试Post请求: 参数在URL"):
+        mock.post_method_variable(path_variable=dict(id=1))
+    with allure.step("测试Post请求: 参数在URL1"):
+        mock.post_method_path_variable(path_variable=dict(id=1))
 
 
 def test_download():
@@ -105,3 +113,5 @@ def test_delete():
     mock.delete_method_json(data=dict(username="xx", pwd="yyy"))
     mock.delete_method_variable(path_variable=dict(id=1))
     mock.delete_method_path_variable(path_variable=dict(id=1))
+
+
