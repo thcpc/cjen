@@ -1,6 +1,4 @@
-<<<<<<< HEAD
-class MetaData(object):
-=======
+
 from cjen.bigtangerine import ContextManager
 
 
@@ -8,7 +6,7 @@ class MetaData(object):
     """
     无法配合使用 装饰器 @property
     """
->>>>>>> dev
+
     def __init__(self):
         self.cols = list(filter(
             lambda method: callable(getattr(self, method)) and not method.startswith("_") and not method.endswith(
@@ -17,11 +15,8 @@ class MetaData(object):
             dir(self)))
         self.meta_data = dict.fromkeys(self.cols, None)
         self.meta_source = None
-<<<<<<< HEAD
-        self.context = {}
-=======
         self.context = ContextManager()
->>>>>>> dev
+
 
     @classmethod
     def is_class(cls, instance):

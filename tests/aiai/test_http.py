@@ -14,7 +14,7 @@ class MockService(BigTangerine):
     def post_method_json(self, *, data, resp=None, **kwargs):
         with allure.step("tttt"):
             print(resp)
-            assert resp.get("procCode") == 100
+            assert resp.get("procCode") == 200
 
     @cjen.http.post_mapping(uri="post_method_variable/{id}")
     def post_method_variable(self, *, path_variable: dict, resp=None, **kwargs):

@@ -1,17 +1,12 @@
 import os
 import queue
 import threading
-<<<<<<< HEAD
+
 import time
-
-
-def haha(*, LogPath: str, LogName: str, Mode: str):
-=======
 
 
 # TODO 集成logging模块
 def haha(*, LogPath: str, LogName: str, Mode: str = "a"):
->>>>>>> dev
     def __wrapper__(func):
         def __inner__(msg: dict):
             logger = smile.log(path=LogPath, file_name=LogName, mode=Mode)
@@ -73,19 +68,11 @@ class Smile(object):
 
     def log(self, *, path: str, file_name: str, mode: str) -> SmileVoice:
         """
-<<<<<<< HEAD
-        create the log thread
-        if the log thread is exist, it will not create the new thread
-        :param path: the path where write the log
-        :param file_name: the file where rite the log
-        :param mode: write mode
-=======
         创建记录日志的线程
         如果记录的日志线程已存在，则不会创建新线程
         :param path: 日志存放路径
         :param file_name: 日志文件名
         :param mode: 写文件的模式
->>>>>>> dev
         :return:
         """
         try:

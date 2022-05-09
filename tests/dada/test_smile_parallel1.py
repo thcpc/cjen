@@ -2,6 +2,7 @@ import os
 import threading
 import time
 from typing import IO
+import cjen
 
 from cjen.dada.smile import SmileVoice
 

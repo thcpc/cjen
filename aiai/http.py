@@ -1,14 +1,30 @@
+import datetime
 import os
 from enum import unique, Enum
+from typing import IO
 
 import requests
 import yaml
 from requests_toolbelt import MultipartEncoder
 
+import cjen
 from cjen.mama.operate.json import factory
 from cjen.bigtangerine import BigTangerine
 from cjen.commons import _get_method_params
 from cjen.exceptions import _check_uri, NetWorkErr, _check_instance
+import cjen.dada.smile
+
+
+@cjen.haha(LogPath=os.getcwd(), LogName="httpd.log", Mode='a')
+def httpd_log(resp, io: IO):
+    date = datetime.datetime.now().strftime('%y-%m-%d %I:%M:%S')
+    method = resp.request.method
+    url = resp.url
+    io.write("{date} {method} {url}\n".format(date=date, method=method, url=url))
+    request_body = resp.request.body
+    if request_body: io.write("  -- request {request_body}\n".format(request_body=str(request_body)))
+    resp_body = resp.content
+    if resp_body: io.write("  -- response {resp_body}\n".format(resp_body=str(resp_body)))
 
 
 def _multipart_form(func):
@@ -50,7 +66,7 @@ class ContentType(Enum):
 
 def _response(func):
     def __inner__(ins: BigTangerine, *args, **kwargs):
-
+        httpd_log(kwargs.get("resp"))
         if kwargs.get("resp").status_code == 200:
             if "application/json" in kwargs.get("resp").headers.get("Content-Type"):
                 kwargs["response_content"] = kwargs.get("resp")
@@ -59,6 +75,7 @@ def _response(func):
 
                 return func(ins, *args, **kwargs)
             kwargs["resp"] = kwargs.get("resp").content
+
             return func(ins, *args, **kwargs)
         else:
             raise NetWorkErr(f'{kwargs.get("url")} {kwargs.get("resp").status_code}')
@@ -92,16 +109,13 @@ def base_url(*, uri: str):
 
 
 def _delete(func):
-
     @_http_headers
     @_http_json(method=requests.delete)
     @_http_default(method=requests.delete)
     def __inner__(ins: BigTangerine, *args, **kwargs):
-
         return func(ins, *args, **kwargs)
 
     return __inner__
-
 
 
 def _get(func):
@@ -109,6 +123,7 @@ def _get(func):
         headers = {**ins.headers, **kwargs.get("headers")} if kwargs.get("headers") else ins.headers
         kwargs["resp"] = requests.get(url=kwargs["url"], headers=headers,
                                       params=kwargs.get("params"))
+
 
 def _http_headers(func):
     def __inner__(ins: BigTangerine, *args, **kwargs):
@@ -177,33 +192,27 @@ def _get(func):
 
 
 def _post(func):
-
     @_http_headers
     @_http_json(method=requests.post)
     @_http_file(method=requests.post)
     @_http_default(method=requests.post)
     def __inner__(ins: BigTangerine, *args, **kwargs):
-
         return func(ins, *args, **kwargs)
 
     return __inner__
 
 
 def _put(func):
-
     @_http_headers
     @_http_json(method=requests.put)
     @_http_default(method=requests.put)
     def __inner__(ins: BigTangerine, *args, **kwargs):
-
         return func(ins, *args, **kwargs)
 
     return __inner__
 
 
-
 def get_mapping(*, uri: str, json_clazz=None):
-
     """
     使用范围：BigTangerine 或其 子类对象
 

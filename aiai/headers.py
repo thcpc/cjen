@@ -5,8 +5,7 @@ from cjen.exceptions import _check_method, _check_instance
 
 
 def basicHeaders(*, headers: dict):
-<<<<<<< HEAD
-=======
+
     """
     使用条件: 作用在 类型 BigTangerine 或 其子类的 对象
 
@@ -17,7 +16,6 @@ def basicHeaders(*, headers: dict):
     :param headers:
     :return:
     """
->>>>>>> dev
     def __wrapper__(func):
         # @_get_method_params(method=func)
         @_check_instance(decorator="headers.basicHeaders", expect=BigTangerine)
@@ -32,8 +30,7 @@ def basicHeaders(*, headers: dict):
 
 
 def appendBasicHeaders(*, headers: dict):
-<<<<<<< HEAD
-=======
+
     """
     使用条件: 作用在 类型 BigTangerine 或 其子类的 对象
 
@@ -44,7 +41,7 @@ def appendBasicHeaders(*, headers: dict):
     :param headers:
     :return:
     """
->>>>>>> dev
+
     def __wrapper__(func):
         @_get_method_params(method=func)
         @_check_instance(decorator="headers.appendBasicHeaders", expect=BigTangerine)
@@ -58,8 +55,7 @@ def appendBasicHeaders(*, headers: dict):
 
 
 def accept(*, value: str):
-<<<<<<< HEAD
-=======
+
     """
     使用条件: 作用在 类型 BigTangerine 或 其子类的 对象
 
@@ -70,7 +66,7 @@ def accept(*, value: str):
     :param value:
     :return:
     """
->>>>>>> dev
+
     def __wrapper__(func):
         @_get_method_params(method=func)
         @_check_instance(decorator="headers.accept", expect=BigTangerine)
@@ -84,8 +80,7 @@ def accept(*, value: str):
 
 
 def contentType(*, value: str):
-<<<<<<< HEAD
-=======
+
     """
     使用条件: 作用在 类型 BigTangerine 或 其子类的 对象
 
@@ -96,7 +91,7 @@ def contentType(*, value: str):
     :param value:
     :return:
     """
->>>>>>> dev
+
     def __wrapper__(func):
         @_get_method_params(method=func)
         @_check_instance(decorator="headers.contentType", expect=BigTangerine)
@@ -109,9 +104,6 @@ def contentType(*, value: str):
     return __wrapper__
 
 
-<<<<<<< HEAD
-def addHeaders(*, value: dict):
-=======
 def addHeaders(*, headers: dict):
     """
     使用条件: 作用在 类型 BigTangerine 或 其子类的 对象
@@ -123,16 +115,12 @@ def addHeaders(*, headers: dict):
     :param headers:
     :return:
     """
->>>>>>> dev
+
     def __wrapper__(func):
         @_get_method_params(method=func)
         @_check_instance(decorator="headers.addHeaders", expect=BigTangerine)
         def __inner__(instance: BigTangerine, *args, **kwargs):
-<<<<<<< HEAD
-            kwargs["headers"] = {**kwargs.get("headers", value), **value}
-=======
             kwargs["headers"] = {**kwargs.get("headers", headers), **headers}
->>>>>>> dev
             return func(instance, *args, **kwargs)
 
         return __inner__
