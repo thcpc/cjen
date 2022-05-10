@@ -138,11 +138,11 @@ def _delete(func):
     return __inner__
 
 
-def _get(func):
-    def __inner__(ins: BigTangerine, *args, **kwargs):
-        headers = {**ins.headers, **kwargs.get("headers")} if kwargs.get("headers") else ins.headers
-        kwargs["resp"] = requests.get(url=kwargs["url"], headers=headers,
-                                      params=kwargs.get("params"))
+# def _get(func):
+#     def __inner__(ins: BigTangerine, *args, **kwargs):
+#         headers = {**ins.headers, **kwargs.get("headers")} if kwargs.get("headers") else ins.headers
+#         kwargs["resp"] = requests.get(url=kwargs["url"], headers=headers,
+#                                       params=kwargs.get("params"))
 
 
 def _http_headers(func):
@@ -210,14 +210,14 @@ def _http_default(*, method):
     return __wrapper__
 
 
-# def _get(func):
-#     def __inner__(ins: BigTangerine, *args, **kwargs):
-#         headers = {**ins.headers, **kwargs.get("headers")} if kwargs.get("headers") else ins.headers
-#         kwargs["resp"] = requests.get(url=kwargs["url"], headers=headers, params=kwargs.get("params"))
-#
-#         return func(ins, *args, **kwargs)
-#
-#     return __inner__
+def _get(func):
+    def __inner__(ins: BigTangerine, *args, **kwargs):
+        headers = {**ins.headers, **kwargs.get("headers")} if kwargs.get("headers") else ins.headers
+        kwargs["resp"] = requests.get(url=kwargs["url"], headers=headers, params=kwargs.get("params"))
+
+        return func(ins, *args, **kwargs)
+
+    return __inner__
 
 
 def _post(func):
