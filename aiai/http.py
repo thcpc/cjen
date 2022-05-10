@@ -15,16 +15,36 @@ from cjen.exceptions import _check_uri, NetWorkErr, _check_instance
 import cjen.dada.smile
 
 
-@cjen.haha(LogPath=os.getcwd(), LogName="httpd.log", Mode='a')
-def httpd_log(resp, io: IO):
+def url_log_content(resp, log_type):
     date = datetime.datetime.now().strftime('%y-%m-%d %I:%M:%S')
     method = resp.request.method
     url = resp.url
-    io.write("{date} {method} {url}\n".format(date=date, method=method, url=url))
+    return "{date} {log_type} {method} {url}\n".format(date=date, log_type=log_type, method=method, url=url)
+
+
+def body_log_content(resp, io: IO):
     request_body = resp.request.body
     if request_body: io.write("  -- request {request_body}\n".format(request_body=str(request_body)))
     resp_body = resp.content
     if resp_body: io.write("  -- response {resp_body}\n".format(resp_body=str(resp_body)))
+
+
+@cjen.haha(LogPath=os.getcwd(), LogName="httpd.log", Mode='a')
+def httpd_log(resp, io: IO):
+    io.write(url_log_content(resp, "info"))
+    body_log_content(resp, io)
+
+
+@cjen.haha(LogPath=os.getcwd(), LogName="httpd.log", Mode='a')
+def httpd_err_log(resp, io: IO):
+    io.write(url_log_content(resp, "error"))
+    body_log_content(resp, io)
+
+
+@cjen.haha(LogPath=os.getcwd(), LogName="httpd.log", Mode='a')
+def httpd_connection_err_log(err, io: IO):
+    date = datetime.datetime.now().strftime('%y-%m-%d %I:%M:%S')
+    io.write("{date} error {err}\n".format(date=date, err=str(err)))
 
 
 def _multipart_form(func):
@@ -66,8 +86,8 @@ class ContentType(Enum):
 
 def _response(func):
     def __inner__(ins: BigTangerine, *args, **kwargs):
-        httpd_log(kwargs.get("resp"))
         if kwargs.get("resp").status_code == 200:
+            httpd_log(kwargs.get("resp"))
             if "application/json" in kwargs.get("resp").headers.get("Content-Type"):
                 kwargs["response_content"] = kwargs.get("resp")
 
@@ -75,9 +95,9 @@ def _response(func):
 
                 return func(ins, *args, **kwargs)
             kwargs["resp"] = kwargs.get("resp").content
-
             return func(ins, *args, **kwargs)
         else:
+            httpd_err_log(kwargs.get("resp"))
             raise NetWorkErr(f'{kwargs.get("url")} {kwargs.get("resp").status_code}')
 
     return __inner__
@@ -149,7 +169,10 @@ def _http_json(*, method):
     def __wrapper__(func):
         def __inner__(ins: BigTangerine, *args, **kwargs):
             if _resp_is_not_none(**kwargs) and _have_content_type(**kwargs) and _is_json(**kwargs):
-                kwargs["resp"] = method(url=kwargs["url"], headers=kwargs["headers"], json=kwargs.get("data"))
+                try:
+                    kwargs["resp"] = method(url=kwargs["url"], headers=kwargs["headers"], json=kwargs.get("data"))
+                except OSError as err:
+                    httpd_connection_err_log(err)
             return func(ins, *args, **kwargs)
 
         return __inner__
@@ -161,7 +184,10 @@ def _http_file(*, method):
     def __wrapper__(func):
         def __inner__(ins: BigTangerine, *args, **kwargs):
             if _resp_is_not_none(**kwargs) and _have_content_type(**kwargs) and _is_upload(**kwargs):
-                kwargs["resp"] = method(url=kwargs["url"], headers=kwargs["headers"], data=kwargs.get("form_data"))
+                try:
+                    kwargs["resp"] = method(url=kwargs["url"], headers=kwargs["headers"], data=kwargs.get("form_data"))
+                except OSError as err:
+                    httpd_connection_err_log(err)
             return func(ins, *args, **kwargs)
 
         return __inner__
@@ -173,7 +199,10 @@ def _http_default(*, method):
     def __wrapper__(func):
         def __inner__(ins: BigTangerine, *args, **kwargs):
             if _resp_is_not_none(**kwargs):
-                kwargs["resp"] = method(url=kwargs["url"], headers=kwargs["headers"], data=kwargs.get("data"))
+                try:
+                    kwargs["resp"] = method(url=kwargs["url"], headers=kwargs["headers"], data=kwargs.get("data"))
+                except OSError as err:
+                    httpd_connection_err_log(err)
             return func(ins, *args, **kwargs)
 
         return __inner__
