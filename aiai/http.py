@@ -24,9 +24,9 @@ def url_log_content(resp, log_type):
 
 def body_log_content(resp, io: IO):
     request_body = resp.request.body
-    if request_body: io.write("  -- request {request_body}\n".format(request_body=str(request_body)))
+    if request_body: io.write("  -- request {request_body}\n".format(request_body=str(request_body, encoding="UTF-8")))
     resp_body = resp.content
-    if resp_body: io.write("  -- response {resp_body}\n".format(resp_body=str(resp_body)))
+    if resp_body: io.write("  -- response {resp_body}\n".format(resp_body=str(resp_body, encoding="UTF-8")))
 
 
 @cjen.haha(LogPath=os.getcwd(), LogName="httpd.log", Mode='a')
