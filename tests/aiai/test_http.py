@@ -73,6 +73,14 @@ class MockService(BigTangerine):
             assert f.read() == "TestUploadFile"
         os.remove(path)
 
+    @cjen.http.upload_mapping(uri="upload_file/{id}")
+    def upload_file1(self, path_variable, data, resp=None, **kwargs):
+        assert resp.get("procCode") == 200
+        path = os.path.join(os.path.dirname(__file__), "upload_target.txt")
+        with open(path, "r") as f:
+            assert f.read() == "TestUploadFile"
+        os.remove(path)
+
 
 @allure.feature("测试POST请求")
 def test_post():
@@ -99,6 +107,10 @@ def test_get():
 def test_upload():
     mock = MockService()
     mock.upload_file(data=dict(file=os.path.join(os.path.dirname(__file__), "upload_source.txt")))
+
+def test_upload1():
+    mock = MockService()
+    mock.upload_file1(path_variable = dict(id = 1),data=dict(file=os.path.join(os.path.dirname(__file__), "upload_source.txt")))
 
 
 def test_put():

@@ -23,10 +23,20 @@ def url_log_content(resp, log_type):
 
 
 def body_log_content(resp, io: IO):
-    request_body = resp.request.body
-    if request_body: io.write("  -- request {request_body}\n".format(request_body=str(request_body, encoding="UTF-8")))
-    resp_body = resp.content
-    if resp_body: io.write("  -- response {resp_body}\n".format(resp_body=str(resp_body, encoding="UTF-8")))
+    request_body_content(resp.request.body, io)
+    response_body_content(resp.content, io)
+
+
+def request_body_content(request_body, io: IO):
+    if request_body and type(request_body) == bytes:
+        io.write("  -- request {request_body}\n".format(request_body=str(request_body, encoding="UTF-8")))
+    if request_body and type(request_body) == MultipartEncoder:
+        io.write("  -- request {request_body}\n".format(request_body=str(request_body)))
+
+
+def response_body_content(resp_body, io: IO):
+    if resp_body:
+        io.write("  -- response {resp_body}\n".format(resp_body=str(resp_body, encoding="UTF-8")))
 
 
 @cjen.haha(LogPath=os.getcwd(), LogName="httpd.log", Mode='a')

@@ -152,6 +152,14 @@ def upload_file():
     rsp.data = json.dumps({"procCode": 200})
     return rsp
 
+@mock_app.route("/upload_file/1", methods=["POST"])
+def upload_file1():
+    file = request.files['file']
+    file.save(os.path.join(os.path.dirname(__file__), "aiai", "upload_target.txt"))
+    rsp = base_json_response()
+    rsp.data = json.dumps({"procCode": 200})
+    return rsp
+
 
 @mock_app.route("/test_headers", methods=["GET"])
 def headers_tester():
