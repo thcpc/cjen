@@ -1,3 +1,6 @@
+from cjen.sco.step_definitions import StepDefinitions
+
+
 class ContextArgs(dict):
     def __init__(self, seq=None, **kwargs):
         if seq:
@@ -80,6 +83,7 @@ class BigTangerine(object):
         self.headers = {}
         self.context = ContextManager()
         cls.check_methods(self)
+        self.step_definitions = StepDefinitions()
         return self
 
     # TODO 增加BigTangerine 中定义方法的检查
