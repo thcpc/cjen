@@ -26,8 +26,8 @@ def body_log_content(resp, io: IO):
     request_body_content(resp.request.body, io)
     if __is_json(resp.headers):
         response_body_content(resp.content, io)
-    else:
-        response_body_content(resp.headers.get("Content-Disposition",""), io)
+    else: pass
+        # response_body_content(resp.headers.get("Content-Disposition", bytes("")), io)
 
 
 def request_body_content(request_body, io: IO):
