@@ -24,7 +24,10 @@ def url_log_content(resp, log_type):
 
 def body_log_content(resp, io: IO):
     request_body_content(resp.request.body, io)
-    response_body_content(resp.content, io)
+    if __is_json(resp.headers):
+        response_body_content(resp.content, io)
+    else:
+        response_body_content(resp.headers.get("Content-Disposition",""), io)
 
 
 def request_body_content(request_body, io: IO):
@@ -98,19 +101,29 @@ def _response(func):
     def __inner__(ins: BigTangerine, *args, **kwargs):
         if kwargs.get("resp").status_code == 200:
             httpd_log(kwargs.get("resp"))
-            if "application/json" in kwargs.get("resp").headers.get("Content-Type"):
+            if __is_json(kwargs.get("resp").headers):
                 kwargs["response_content"] = kwargs.get("resp")
-
                 kwargs["resp"] = kwargs.get("resp").json() if kwargs.get("resp").content else None
-
                 return func(ins, *args, **kwargs)
-            kwargs["resp"] = kwargs.get("resp").content
-            return func(ins, *args, **kwargs)
+            elif __is_file(kwargs.get("resp").headers):
+                kwargs["resp"] = kwargs.get("resp").content
+                return func(ins, *args, **kwargs)
+            else:
+                kwargs["resp"] = kwargs.get("resp").content
+                return func(ins, *args, **kwargs)
         else:
             httpd_err_log(kwargs.get("resp"))
             raise NetWorkErr(f'{kwargs.get("url")} {kwargs.get("resp").status_code}')
 
     return __inner__
+
+
+def __is_json(headers):
+    return "application/json" in headers.get("Content-Type") and headers.get("Content-Disposition") is None
+
+
+def __is_file(headers):
+    return "application/json" in headers.get("Content-Type") and headers.get("Content-Disposition") is not None
 
 
 def _url(*, uri: str):
