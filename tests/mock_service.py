@@ -63,7 +63,7 @@ def refresh_in_body(): return token_in_body("Jwt Refresh Token In Body")
 def post_method_json():
     if request.json["username"] and request.json["pwd"]:
         rsp = base_json_response()
-        rsp.data = json.dumps({"procCode": 200})
+        rsp.data = json.dumps({"procCode": 200,"name": "yyy"})
         return rsp
 
 
