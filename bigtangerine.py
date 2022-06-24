@@ -86,6 +86,9 @@ class BigTangerine(object):
         self.step_definitions = StepDefinitions()
         return self
 
+    def register_step(self,  step):
+        self.step_definitions[step.Name] = step
+
     # TODO 增加BigTangerine 中定义方法的检查
     @classmethod
     def check_methods(cls, ins): pass
