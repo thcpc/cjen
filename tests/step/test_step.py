@@ -1,5 +1,7 @@
 import cjen
 from cjen import BigTangerine
+from cjen.sco.scenario import Scenario
+from cjen.tests.aiai.test_http import MockService
 from cjen.tests.step.ok_response import OKResponse
 from cjen.tests.step.ok_step import OkStep
 from cjen.tests.step.other_step import OtherStep
@@ -37,3 +39,18 @@ def test_register():
     for i, step in enumerate(steps):
         step.run()
         assert len(mock.step_definitions) == i + 1
+
+
+def test_new_scenario():
+    scenario = Scenario("", MockService())
+    scenario.add_step(OkStep)
+    scenario.add_step(OtherStep)
+    scenario.run()
+
+
+def test_compatible_old_scenario():
+    scenario = Scenario("")
+    service = MockService()
+    scenario.append_step(OkStep, service)
+    scenario.append_step(OtherStep, service)
+    scenario.run()

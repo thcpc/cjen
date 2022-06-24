@@ -5,6 +5,7 @@ import cjen
 from cjen import BigTangerine
 
 
+
 class MockService(BigTangerine):
     @cjen.http.base_url(uri="http://127.0.0.1:5000")
     def __init__(self): super().__init__()
@@ -125,5 +126,6 @@ def test_delete():
     mock.delete_method_json(data=dict(username="xx", pwd="yyy"))
     mock.delete_method_variable(path_variable=dict(id=1))
     mock.delete_method_path_variable(path_variable=dict(id=1))
+
 
 
