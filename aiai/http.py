@@ -1,5 +1,6 @@
 import datetime
 import os
+import warnings
 from enum import unique, Enum
 from typing import IO
 
@@ -70,7 +71,7 @@ def _multipart_form(func):
                 files[k] = v
             else:
                 others[k] = v
-        if not files: raise Exception("there is no file!")
+        if not files: warnings.warn("there is no file!", Warning, stacklevel=4)
         for k, v in files.items():
             with open(v, 'rb') as f:
                 *rest, postfix = f.name.split(".")
