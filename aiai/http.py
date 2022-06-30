@@ -78,7 +78,7 @@ def _multipart_form(func):
                 files[k] = (os.path.basename(f.name), f.read(), _file_type(file_postfix=f".{postfix}"))
 
         kwargs["form_data"] = MultipartEncoder(fields={**files, **others})
-        ins.headers["Content-Type"] = kwargs["form_data"].content_type
+        kwargs["headers"] = {"Content-Type": kwargs["form_data"].content_type}
         return func(ins, *args, **kwargs)
 
     return __inner__
