@@ -74,14 +74,16 @@ def one(*, json_path: str):
     return __wrapper__
 
 
-
 def listOf(*, clazz):
     def __wrapper__(func):
         @_get_method_params(method=func)
         @_check_instance(decorator="operate.json.many", expect=MetaData)
         def __inner__(ins: MetaData, *args, **kwargs):
             field = func(ins, *args, **kwargs) if func.__name__ == '__inner__' else func.__name__
-            ins.meta_data[field] = [MetaJson.factory(clazz=clazz, data=data) for data in ins.meta_data.get(field)]
+            if ins.meta_data.get(field) is None:
+                ins.meta_data[field] = []
+            else:
+                ins.meta_data[field] = [MetaJson.factory(clazz=clazz, data=data) for data in ins.meta_data.get(field)]
             return field
 
         return __inner__
@@ -126,8 +128,6 @@ def many(*, json_path: str, filter_keys: list[str] = None):
                 zip(filter_keys, [obj.get(key) for key in filter_keys])) for obj in json_data]
             return field
 
-
         return __inner__
 
     return __wrapper__
-
