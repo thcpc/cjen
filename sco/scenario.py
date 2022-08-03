@@ -2,6 +2,17 @@ import os
 import json
 
 
+def Tester(func):
+    """
+    设置 该装饰器后，Scenario下的step会执行带有Testing标签的测试用例。
+    """
+    def __inner__(self, *args, **kwargs):
+        func(self, *args, **kwargs)
+        self.is_run_test = True
+
+    return __inner__
+
+
 class Scenario:
     # 为了兼容已有的代码
     # 所以增加的参数service 默认为None
@@ -11,6 +22,7 @@ class Scenario:
         self.__load()
         self.steps = []
         self.service = service
+        self.is_run_test = False
 
     def __load(self):
         for root, dirs, files in os.walk(self.scenario_dir):

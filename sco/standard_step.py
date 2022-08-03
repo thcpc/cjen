@@ -1,3 +1,24 @@
+def Testing(*, test_clazz, test_method):
+    """
+    执行测试用力装饰器，一般加在step 的call_back上
+    test_clazz: 测试用例的执行类
+    test_method: 测试用例的执行方法
+    PS: 测试的数据是存放在service.context 中， Step 可定义VO关键字，来获取
+    """
+
+    def __wrapper__(func):
+        def __inner__(ins: StandardStep, *args, **kwargs):
+            func(ins, *args, **kwargs)
+            if not ins.scenario.is_run_test:
+                return
+            tester = test_clazz(ins.scenario)
+            getattr(tester, test_method)(ins.service.context[ins.VO])
+
+        return __inner__
+
+    return __wrapper__
+
+
 class StandardStep:
 
     def __init__(self, service, scenario):
