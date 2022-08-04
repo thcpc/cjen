@@ -41,7 +41,7 @@ def type_boolean(*, true, false):
 
         return __inner__
 
-    return __wrapper__()
+    return __wrapper__
 
 
 def timezone(*, zone: str): pass

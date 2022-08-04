@@ -2,15 +2,21 @@ import os
 import json
 
 
-def Tester(func):
+def Tester(Clazzes=[]):
     """
     设置 该装饰器后，Scenario下的step会执行带有Testing标签的测试用例。
     """
-    def __inner__(self, *args, **kwargs):
-        func(self, *args, **kwargs)
-        self.is_run_test = True
 
-    return __inner__
+    def __wrapper__(func):
+        def __inner__(self, *args, **kwargs):
+            func(self, *args, **kwargs)
+            self.is_run_test = True
+            for clazz in Clazzes:
+                self.register_test_classes.add(clazz)
+
+        return __inner__
+
+    return __wrapper__
 
 
 class Scenario:
@@ -23,6 +29,7 @@ class Scenario:
         self.steps = []
         self.service = service
         self.is_run_test = False
+        self.register_test_classes = set()
 
     def __load(self):
         for root, dirs, files in os.walk(self.scenario_dir):

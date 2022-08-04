@@ -9,10 +9,9 @@ def Testing(*, test_clazz, test_method):
     def __wrapper__(func):
         def __inner__(ins: StandardStep, *args, **kwargs):
             func(ins, *args, **kwargs)
-            if not ins.scenario.is_run_test:
-                return
-            tester = test_clazz(ins.scenario)
-            getattr(tester, test_method)(ins.service.context[ins.VO])
+            if ins.scenario.is_run_test and test_clazz in ins.scenario.regsiter_test_classes:
+                tester = test_clazz(ins.scenario)
+                getattr(tester, test_method)(ins.service.context[ins.VO])
 
         return __inner__
 
