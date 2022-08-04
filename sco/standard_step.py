@@ -9,7 +9,7 @@ def Testing(*, test_clazz, test_method):
     def __wrapper__(func):
         def __inner__(ins: StandardStep, *args, **kwargs):
             func(ins, *args, **kwargs)
-            if ins.scenario.is_run_test and test_clazz in ins.scenario.regsiter_test_classes:
+            if ins.scenario.is_run_test and test_clazz in ins.scenario.register_test_classes:
                 tester = test_clazz(ins.scenario)
                 getattr(tester, test_method)(ins.service.context[ins.TO])
 
