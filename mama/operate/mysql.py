@@ -50,6 +50,16 @@ def timezone(*, zone: str): pass
 def type_str_datetime(*, fmt: str): pass
 
 
+def __query_args(ins, params, kwargs):
+
+    query_args = None
+    if params is None:
+        query_args = dict((key, value) for key, value in kwargs.items() if key!="method.__annotations__" )
+    # params 从参数中获取
+    else:
+        query_args = ins.context.pick_up(context_args=params) if isinstance(params, ContextArgs) else params
+    return query_args
+
 def factory(*, cursor: Cursor = None, clazz, sql: str, params=None, size=1, track=False):
     """
     使用条件: 作用在 类型 BigTangerine 或 其子类的 对象 \n
@@ -62,7 +72,7 @@ def factory(*, cursor: Cursor = None, clazz, sql: str, params=None, size=1, trac
     :param size: -1 代表取所有的,
     :param params: sql的查询条件,
     :param sql: 查询的 sql
-    :param clazz:
+    :param clazz: 指定class为 dict, 则返回的原始数据
     :return: 支持返回一个对象 或 对象列表
     """
 
@@ -74,7 +84,11 @@ def factory(*, cursor: Cursor = None, clazz, sql: str, params=None, size=1, trac
 
             try:
                 mysql_cursor = cursor if cursor else ins.context.get("cursor")
-                query_args = ins.context.pick_up(context_args=params) if isinstance(params, ContextArgs) else params
+                query_args = __query_args(ins, params, kwargs)
+                # if params is None: pass
+                #     # params 从参数中获取
+                # else:
+                #     query_args = ins.context.pick_up(context_args=params) if isinstance(params, ContextArgs) else params
                 mysql_cursor.execute(sql, args=query_args)
                 if track: track_sql(dict(sql=mysql_cursor.mogrify(sql, args=query_args)))
                 values = mysql_cursor.fetchall()
@@ -85,12 +99,15 @@ def factory(*, cursor: Cursor = None, clazz, sql: str, params=None, size=1, trac
                 for key, val in kwargs.get("method.__annotations__").items():
                     if issubclass(val, clazz) or (
                             "__origin__" in dir(val) and val.__origin__ == list and issubclass(val.__args__[0], clazz)):
-                        metas = [MetaData.factory(clazz=clazz, data=ele) for ele in data]
-                        for meta in metas:
-                            meta.meta_data = meta.meta_source
-                            if ins.context:
-                                meta.context.update(ins.context)
-                        kwargs[key] = metas[0] if size == 1 else metas
+                        if clazz is dict:
+                            kwargs[key] = data[0] if size == 1 else data
+                        else:
+                            metas = [MetaData.factory(clazz=clazz, data=ele) for ele in data]
+                            for meta in metas:
+                                meta.meta_data = meta.meta_source
+                                if ins.context:
+                                    meta.context.update(ins.context)
+                            kwargs[key] = metas[0] if size == 1 else metas
 
                 return func(ins, *args, **kwargs)
             except Exception as e:
@@ -102,6 +119,8 @@ def factory(*, cursor: Cursor = None, clazz, sql: str, params=None, size=1, trac
         return __inner__
 
     return __wrapper__
+
+
 
 
 def type_datetime_str(*, fmt: str):
