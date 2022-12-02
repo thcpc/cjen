@@ -671,7 +671,13 @@ class AssertMockService(BigTangerine):
     def validation_appoint(self, resp=None, company: CompanyC01 = None, resp_null: ResponseNone = None, **kwargs): ...
 ```
 
-
+# 待解决的问题
+通过数据库查询时，在数据库查询之前，调用了requests方法，则数据库在读取数据时
+```commandline
+self._scok.settimeout(timeout)
+# 该方法调用时间会增加，在查询大数据的时候，会很慢
+# 原因暂时没找到，临时解决是调整调用顺序
+```
 
 # Release Note
 

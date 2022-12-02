@@ -89,6 +89,7 @@ def factory(*, cursor: Cursor = None, clazz, sql: str, params=None, size=1, trac
                 #     # params 从参数中获取
                 # else:
                 #     query_args = ins.context.pick_up(context_args=params) if isinstance(params, ContextArgs) else params
+                if not query_args: query_args = None
                 mysql_cursor.execute(sql, args=query_args)
                 if track: track_sql(dict(sql=mysql_cursor.mogrify(sql, args=query_args)))
                 values = mysql_cursor.fetchall()
