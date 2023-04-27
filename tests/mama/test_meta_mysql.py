@@ -81,7 +81,7 @@ class CMysql(BigTangerine):
     @cjen.operate.mysql.factory(cursor=cursor(), clazz=dict,
                                 sql=FileHelper.cur_read(cur=__file__, file="employees_of_company.sql"),
                                 size=-1)
-    def get_c01_employees_new(self,employees: list[dict], **kwargs):
+    def get_c01_employees_new(self, employees: list[dict], **kwargs):
         assert len(employees) == 7
         for employee in employees: assert employee.get("company") == "C01"
 
