@@ -1,3 +1,6 @@
+from cjen.nene.collections.tree import Tree
+
+
 def list_eql(arr1: list, arr2: list, strict: bool = False):
     """
     判断 两个列表是否相同
@@ -16,3 +19,7 @@ def list_eql(arr1: list, arr2: list, strict: bool = False):
     for e in arr2:
         if e not in arr1: return False
     return True
+
+
+def make_tree(total_level, data: list[dict] = None):
+    return Tree.factory(total_level, data)
