@@ -1,7 +1,7 @@
 from openpyxl import load_workbook
 
 
-def reader(*, fpath: str, header: bool = True, sheet_name: str = None, cols: list = None):
+def reader(*, fpath: str = None, header: bool = True, sheet_name: str = None, cols: list = None):
     """
     使用条件：任务对象和函数上都可以添加
     函数参数需带 xlsx_data
@@ -27,7 +27,8 @@ def reader(*, fpath: str, header: bool = True, sheet_name: str = None, cols: lis
 
     def __wrapper__(func):
         def __inner__(*args, **kwargs):
-            work_book = load_workbook(filename=fpath)
+            xls_path = fpath if fpath is not None else kwargs.get("fpath")
+            work_book = load_workbook(filename=xls_path)
             work_sheet = work_book.worksheets[0] if not sheet_name else \
                 list(filter(lambda s: s.title == sheet_name, work_book.worksheets))[0]
             cells = [[cell.value for cell in row] for row in work_sheet.rows]

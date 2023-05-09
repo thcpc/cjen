@@ -15,3 +15,12 @@ def test_xlsx_reader_with_col(xlsx_data: list = None):
 def test_xlsx_reader_with_all(xlsx_data: list = None):
     assert xlsx_data[0][0] == "id"
     assert xlsx_data[0][1] == "name"
+
+@cjen.operate.xlsx.reader(cols=[0,1])
+def xlsx_with_fpath(fpath: str = None, xlsx_data: list = None):
+    assert xlsx_data[0][0] == "id"
+    assert xlsx_data[0][1] == "name"
+
+def test_fpath():
+    xlsx_with_fpath(fpath="test_data.xlsx")
+
