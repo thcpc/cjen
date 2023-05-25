@@ -2,6 +2,14 @@ import re
 import warnings
 
 
+class PropertyRequiredException(Exception):
+    ...
+
+
+class PropertyRangerException(Exception):
+    ...
+
+
 class MethodWrongErr(Exception): ...
 
 
