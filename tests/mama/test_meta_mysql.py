@@ -84,11 +84,9 @@ class CMysql(BigTangerine):
     def get_c01_employees_new(self, employees: list[dict], **kwargs):
         assert len(employees) == 7
         for employee in employees: assert employee.get("company") == "C01"
-
 def test_mysql_factory_no_params():
     CMysql().get_one_company()
     CMysql().get_many_companies()
-
 
 def test_mysql_factory_with_normal_params():
     # dict

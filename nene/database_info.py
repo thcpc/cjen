@@ -21,6 +21,10 @@ class DataBaseInfo:
     @required()
     def database(self): return self.info.get("database")
 
+    @property
+    @required()
+    def port(self): return self.info.get("port")
+
     """
     为了兼容以前传递的字典
     """
@@ -29,6 +33,7 @@ class DataBaseInfo:
         elif key == "host": return self.host
         elif key == "pwd": return self.pwd
         elif key == "database": return self.database
+        elif key == "port": return self.port
 
     @classmethod
     def factory(cls, data_dict: dict):
