@@ -158,6 +158,27 @@ def type_datetime_stamp(func):
     return __inner__
 
 
+def bytes_to_bool(func):
+    """
+    配合 common.value 使用
+
+    把 bytes 转为 bool 值
+
+    b'\x01'- True,
+    b'\x00'or None - False
+
+    @cjen.operate.mysql.bytes_to_bool
+    @cjen.operate.common.value
+    def data(self): ...
+    """
+
+    def __inner__(ins: MetaData, *args, **kwargs):
+        field_value = func(ins, *args, **kwargs) if func.__name__ == '__inner__' else func.__name__
+        if field_value == b'\x01': return True
+        else: return False
+    return __inner__
+
+
 class TestObj(MetaMysql):
     @value
     def id(self): ...
