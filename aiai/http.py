@@ -62,6 +62,9 @@ def httpd_connection_err_log(err, io: IO):
 
 
 def _multipart_form(func):
+    """
+    目前如果传递的参数包含 dict 或  list 不支持
+    """
     def __inner__(ins: BigTangerine, *args, **kwargs):
         data_form = kwargs.get("data")
         files = {}
@@ -89,7 +92,8 @@ def _file_type(*, file_postfix):
         content_type = yaml.load(f.read(), Loader=yaml.FullLoader).get("ContentType")
         if content_type.get(file_postfix):
             return content_type.get(file_postfix)
-    raise Exception(f"{file_postfix} can not support !")
+    return "application/octet-stream"
+    # raise Exception(f"{file_postfix} can not support !")
 
 
 @unique
