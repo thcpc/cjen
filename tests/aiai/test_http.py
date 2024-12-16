@@ -14,7 +14,7 @@ class MockService(BigTangerine):
     @cjen.http.post_mapping(uri="post_method_json")
     def post_method_json(self, *, data, resp=None, **kwargs):
         with allure.step("tttt"):
-            print(resp)
+
             assert resp.get("procCode") == 200
 
     @cjen.http.post_mapping(uri="post_method_variable/{id}")
@@ -41,7 +41,7 @@ class MockService(BigTangerine):
         assert resp.get("procCode") == 200
         assert resp.get("path_variable") == path_variable.get("id")
 
-    @cjen.http.get_mapping(uri="get_method_variable/{id}")
+    @cjen.http.get_mapping(uri="get_method_variable/{id}", islog_info=True)
     def get_method_variable(self, *, path_variable: dict, resp=None, **kwargs):
         assert resp.get("procCode") == 200
         assert resp.get("path_variable") == path_variable.get("id")
@@ -92,6 +92,8 @@ def test_post():
         mock.post_method_variable(path_variable=dict(id=1))
     with allure.step("测试Post请求: 参数在URL1"):
         mock.post_method_path_variable(path_variable=dict(id=1))
+
+
 
 
 def test_download():

@@ -27,8 +27,9 @@ def body_log_content(resp, io: IO):
     request_body_content(resp.request.body, io)
     if __is_json(resp.headers):
         response_body_content(resp.content, io)
-    else: pass
-        # response_body_content(resp.headers.get("Content-Disposition", bytes("")), io)
+    else:
+        pass
+    # response_body_content(resp.headers.get("Content-Disposition", bytes("")), io)
 
 
 def request_body_content(request_body, io: IO):
@@ -47,12 +48,16 @@ def response_body_content(resp_body, io: IO):
 def httpd_log(resp, io: IO):
     io.write(url_log_content(resp, "info"))
     body_log_content(resp, io)
+    io.flush()
+    io.close()
 
 
 @cjen.haha(LogPath=os.getcwd(), LogName="httpd.log", Mode='a')
 def httpd_err_log(resp, io: IO):
     io.write(url_log_content(resp, "error"))
     body_log_content(resp, io)
+    io.flush()
+    io.close()
 
 
 @cjen.haha(LogPath=os.getcwd(), LogName="httpd.log", Mode='a')
@@ -65,6 +70,7 @@ def _multipart_form(func):
     """
     目前如果传递的参数包含 dict 或  list 不支持
     """
+
     def __inner__(ins: BigTangerine, *args, **kwargs):
         data_form = kwargs.get("data")
         files = {}
@@ -102,25 +108,28 @@ class ContentType(Enum):
     FILE_STREAM = "stream"
 
 
-def _response(func):
-    def __inner__(ins: BigTangerine, *args, **kwargs):
-        if kwargs.get("resp").status_code == 200:
-            httpd_log(kwargs.get("resp"))
-            if __is_json(kwargs.get("resp").headers):
-                kwargs["response_content"] = kwargs.get("resp")
-                kwargs["resp"] = kwargs.get("resp").json() if kwargs.get("resp").content else None
-                return func(ins, *args, **kwargs)
-            elif __is_file(kwargs.get("resp").headers):
-                kwargs["resp"] = kwargs.get("resp").content
-                return func(ins, *args, **kwargs)
+def _response(islog_info):
+    def __wrapper__(func):
+        def __inner__(ins: BigTangerine, *args, **kwargs):
+            if kwargs.get("resp").status_code == 200:
+                if islog_info: httpd_log(kwargs.get("resp"))
+                if __is_json(kwargs.get("resp").headers):
+                    kwargs["response_content"] = kwargs.get("resp")
+                    kwargs["resp"] = kwargs.get("resp").json() if kwargs.get("resp").content else None
+                    return func(ins, *args, **kwargs)
+                elif __is_file(kwargs.get("resp").headers):
+                    kwargs["resp"] = kwargs.get("resp").content
+                    return func(ins, *args, **kwargs)
+                else:
+                    kwargs["resp"] = kwargs.get("resp").content
+                    return func(ins, *args, **kwargs)
             else:
-                kwargs["resp"] = kwargs.get("resp").content
-                return func(ins, *args, **kwargs)
-        else:
-            httpd_err_log(kwargs.get("resp"))
-            raise NetWorkErr(f'{kwargs.get("url")} {kwargs.get("resp").status_code}')
+                httpd_err_log(kwargs.get("resp"))
+                raise NetWorkErr(f'{kwargs.get("url")} {kwargs.get("resp").status_code}')
 
-    return __inner__
+        return __inner__
+
+    return __wrapper__
 
 
 def __is_json(headers):
@@ -269,7 +278,7 @@ def _put(func):
     return __inner__
 
 
-def get_mapping(*, uri: str, json_clazz=None):
+def get_mapping(*, uri: str, json_clazz=None, islog_info=False):
     """
     使用范围：BigTangerine 或其 子类对象
 
@@ -279,6 +288,7 @@ def get_mapping(*, uri: str, json_clazz=None):
 
     :param json_clazz: 如果期望返回数据直接生成MetaJson, 则指定该生成的类型
     :param uri:
+    :param islog: 是否打印访问日志
     :return:
     """
 
@@ -288,7 +298,7 @@ def get_mapping(*, uri: str, json_clazz=None):
         @_check_uri(uri=uri)
         @_url(uri=uri)
         @_get
-        @_response
+        @_response(islog_info=islog_info)
         @factory(clazz=json_clazz)
         def __inner__(ins: BigTangerine, *args, **kwargs):
             func(ins, *args, **kwargs)
@@ -299,7 +309,7 @@ def get_mapping(*, uri: str, json_clazz=None):
     return __wrapper__
 
 
-def post_mapping(*, uri: str, json_clazz=None):
+def post_mapping(*, uri: str, json_clazz=None, islog_info=False):
     """
     使用范围：BigTangerine 或其 子类对象
 
@@ -308,8 +318,8 @@ def post_mapping(*, uri: str, json_clazz=None):
     发送 Post 请求，并返回结果
 
     :param json_clazz:
-
     :param uri:
+    :param islog: 是否打印访问日志
     :return:
     """
 
@@ -319,7 +329,7 @@ def post_mapping(*, uri: str, json_clazz=None):
         @_check_uri(uri=uri)
         @_url(uri=uri)
         @_post
-        @_response
+        @_response(islog_info=islog_info)
         @factory(clazz=json_clazz)
         def __inner__(ins: BigTangerine, *args, **kwargs):
             func(ins, *args, **kwargs)
@@ -330,7 +340,7 @@ def post_mapping(*, uri: str, json_clazz=None):
     return __wrapper__
 
 
-def put_mapping(*, uri: str, json_clazz=None):
+def put_mapping(*, uri: str, json_clazz=None, islog_info=False):
     """
     使用范围：BigTangerine 或其 子类对象
 
@@ -339,8 +349,8 @@ def put_mapping(*, uri: str, json_clazz=None):
     发送 PUT 请求，并返回结果
 
     :param json_clazz:
-
     :param uri:
+    :param islog: 是否打印访问日志
     :return:
     """
 
@@ -350,7 +360,7 @@ def put_mapping(*, uri: str, json_clazz=None):
         @_check_uri(uri=uri)
         @_url(uri=uri)
         @_put
-        @_response
+        @_response(islog_info=islog_info)
         @factory(clazz=json_clazz)
         def __inner__(ins: BigTangerine, *args, **kwargs):
             func(ins, *args, **kwargs)
@@ -361,7 +371,7 @@ def put_mapping(*, uri: str, json_clazz=None):
     return __wrapper__
 
 
-def upload_mapping(*, uri: str, json_clazz=None):
+def upload_mapping(*, uri: str, json_clazz=None, islog_info=False):
     """
     使用范围：BigTangerine 或其 子类对象
 
@@ -371,6 +381,7 @@ def upload_mapping(*, uri: str, json_clazz=None):
 
     :param json_clazz:
     :param uri:
+    :param islog: 是否打印访问日志
     :return:
     """
 
@@ -381,7 +392,7 @@ def upload_mapping(*, uri: str, json_clazz=None):
         @_url(uri=uri)
         @_multipart_form
         @_post
-        @_response
+        @_response(islog_info=islog_info)
         @factory(clazz=json_clazz)
         def __inner__(ins: BigTangerine, *args, **kwargs):
             func(ins, *args, **kwargs)
@@ -392,7 +403,7 @@ def upload_mapping(*, uri: str, json_clazz=None):
     return __wrapper__
 
 
-def delete_mapping(*, uri: str, json_clazz=None):
+def delete_mapping(*, uri: str, json_clazz=None, islog_info=False):
     """
     使用范围：BigTangerine 或其 子类对象
 
@@ -402,6 +413,7 @@ def delete_mapping(*, uri: str, json_clazz=None):
 
     :param json_clazz:
     :param uri:
+    :param islog: 是否打印访问日志
     :return:
     """
 
@@ -411,7 +423,7 @@ def delete_mapping(*, uri: str, json_clazz=None):
         @_check_uri(uri=uri)
         @_url(uri=uri)
         @_delete
-        @_response
+        @_response(islog_info=islog_info)
         @factory(clazz=json_clazz)
         def __inner__(ins: BigTangerine, *args, **kwargs):
             func(ins, *args, **kwargs)
